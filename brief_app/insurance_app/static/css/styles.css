@@ -1,17 +1,27 @@
-
 /* Welcome Page Specific Styles */
 #welcome-page {
-    background-color: black;
+    background-image: url('/static/homepage_background.png'); /* Correct path to image */
+    background-size: cover; /* Ensure the image covers the entire content area */
+    background-position: center; /* Center the image */
     color: whitesmoke;
     font-family: Arial, sans-serif;
-}
+    padding-top: 60px; /* Add space for the header */
+    height: 100vh; /* Ensure the background fills the viewport */
+}  
 
+/* Header Styles */
 #welcome-page .header {
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
     padding: 20px;
     text-align: left;
+    position: fixed; /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    width: 100%; /* Make header span the entire width */
+    z-index: 10; /* Ensure the header stays on top of other content */
 }
 
+/* Button Styles */
 #welcome-page .buttons {
     display: flex;
     gap: 10px;
@@ -30,13 +40,15 @@
     background-color: palevioletred;
 }
 
+/* Content Styles */
 #welcome-page .content {
-    height: 100vh;
+    height: calc(100vh - 60px); /* Subtract header height from the total height */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Heading Styles */
 #welcome-page h1 {
     font-size: 3rem;
 }
