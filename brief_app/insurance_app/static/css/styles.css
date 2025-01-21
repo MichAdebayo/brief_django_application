@@ -1,0 +1,42 @@
+
+/* Welcome Page Specific Styles */
+#welcome-page {
+    background-color: black;
+    color: whitesmoke;
+    font-family: Arial, sans-serif;
+}
+
+#welcome-page .header {
+    background-color: black;
+    padding: 20px;
+    text-align: left;
+}
+
+#welcome-page .buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#welcome-page .button {
+    color: white;
+    background-color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#welcome-page .button:hover {
+    background-color: palevioletred;
+}
+
+#welcome-page .content {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#welcome-page h1 {
+    font-size: 3rem;
+}

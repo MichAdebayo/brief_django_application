@@ -23,3 +23,5 @@ class UserProfile(models.Model):
 class SignUp(models.Model):
     user_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
+
+
