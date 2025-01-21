@@ -18,7 +18,6 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user_name
-    
 
 class SignUp(models.Model):
     user_name = models.CharField(max_length=100)
