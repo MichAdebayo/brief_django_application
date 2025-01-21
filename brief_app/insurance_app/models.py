@@ -16,17 +16,22 @@ class Login(models.Model):
         return self.email
 
 class UserProfile(models.Model):
+    
+
     first_name = models.CharField(max_length=200)
     surname_name = models.CharField(max_length=200)
-    sex = models.CharField(max_length=200)
-    smoker = models.CharField(max_length=200)
-    region = models.CharField(max_length=200)
-    weight = models.CharField(max_length=200)
-    height = models.CharField(max_length=200) 
-    sex = models.CharField(max_length=200)
+    
+    smoker = models.TextChoices("Yes", "No")
+    region = models.TextChoices("Northeast", "Northwest", "Southeast", "Southwest")
+    sex = models.TextChoices("Male", "Female")
+
+    age = models.IntegerField(max_length=3)
+    weight = models.IntegerField(max_length=200)
+    height = models.IntegerField(max_length=200) 
+
     email = models.ForeignKey(SignUp, null=True, on_delete=models.SET_NULL)
     user_name = models.ForeignKey(SignUp, null=True, on_delete=models.SET_NULL)
-    
+
     def __str__(self):
         return self.user_name
 
