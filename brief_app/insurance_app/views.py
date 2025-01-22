@@ -5,7 +5,6 @@ from django.views.generic.edit import FormView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -25,3 +24,5 @@ class SignupView(FormView):
         user = form.save()              # Automatically log in the user after signup
         login(self.request, user)       # Redirect to the home page
         return redirect('home')
+    
+

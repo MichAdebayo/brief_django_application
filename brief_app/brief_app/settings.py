@@ -33,6 +33,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
+    
+    # Others Django Apps
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 
     # Django
     'django.contrib.admin',
@@ -135,3 +140,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 # Optional: URL for the login page (used by @login_required decorator)
 LOGIN_URL = '/login/'
+
+
+# Tailwind Theme
+TAILWIND_APP_NAME = 'theme'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
