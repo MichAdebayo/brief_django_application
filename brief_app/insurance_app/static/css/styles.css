@@ -1,27 +1,21 @@
 /* Welcome Page Specific Styles */
 #welcome-page {
-    background-image: url('/static/homepage_background.png'); /* Correct path to image */
-    background-size: cover; /* Ensure the image covers the entire content area */
+    background-image: url('{% static "images/homepage_background.png" %}'); /* Set the background image */
+    background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the image */
     color: whitesmoke;
     font-family: Arial, sans-serif;
-    padding-top: 60px; /* Add space for the header */
-    height: 100vh; /* Ensure the background fills the viewport */
-}  
-
-/* Header Styles */
-#welcome-page .header {
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
-    padding: 20px;
-    text-align: left;
-    position: fixed; /* Fix the header at the top */
-    top: 0;
-    left: 0;
-    width: 100%; /* Make header span the entire width */
-    z-index: 10; /* Ensure the header stays on top of other content */
+    position: relative; /* Allow absolute positioning of the info bar */
+    height: 100vh; /* Set height to 100% of the viewport */
 }
 
-/* Button Styles */
+/* Header Section */
+#welcome-page .header {
+    background-color: rgba(0, 0, 0, 0.7); /* Transparent black background */
+    padding: 20px;
+    text-align: left;
+}
+
 #welcome-page .buttons {
     display: flex;
     gap: 10px;
@@ -40,15 +34,75 @@
     background-color: palevioletred;
 }
 
-/* Content Styles */
+
+/* Welcome Message Centering */
 #welcome-page .content {
-    height: calc(100vh - 60px); /* Subtract header height from the total height */
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: center;  /* Ensures vertical centering */
     align-items: center;
+    height: calc(100vh - 150px); /* Adjust height considering header and footer */
+    text-align: center;
+    position: relative; /* Allow info-bar to be positioned within the content area */
 }
 
-/* Heading Styles */
+/* Info Bar Styles */
+.info-bar {
+    display: flex; /* Makes the sections side by side */
+    justify-content: space-between; /* Space between the two sections */
+    align-items: center; /* Vertically align content */
+    background-color: rgba(0, 0, 0, 0.7); /* Black transparent background */
+    padding: 30px 50px; /* More padding to increase the size of the bar */
+    width: 80%; /* Makes the info bar smaller than the full width */
+    left: 50%; /* Centers the info bar horizontally */
+    transform: translateX(-50%); /* Corrects the centering */
+    position: absolute;
+    bottom: 50px; /* Ensures the info bar is above the footer */
+}
+
+/* Each Section Inside Info Bar */
+.info-section {
+    width: 48%; /* Each section takes up about half the width */
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.info-section h3 {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.info-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-section ul li {
+    margin: 5px 0;
+}
+
+.info-section ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.info-section ul li a:hover {
+    color: palevioletred;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: white; /* White background for footer */
+    text-align: left; /* Center the footer content */
+    padding: 20px;
+    font-weight: bold;
+    color: darkgrey; /* Dark grey text */
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
 #welcome-page h1 {
-    font-size: 3rem;
+    font-size: 4rem;
+    margin: 0;
 }
