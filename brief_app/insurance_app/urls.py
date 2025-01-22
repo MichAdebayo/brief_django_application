@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.urls import path, include
 from .views import CustomLoginView, SignupView, HomeView
 from django.contrib.auth.views import LogoutView
@@ -11,3 +12,11 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 
+=======
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.welcome, name='welcome'), #This is our welcome page'
+]
+>>>>>>> origin/accueil

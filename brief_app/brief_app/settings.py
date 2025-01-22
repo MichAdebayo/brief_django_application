@@ -33,11 +33,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
+<<<<<<< HEAD
     
     # Others Django Apps
     'tailwind',
     'theme',
     'django_browser_reload',
+=======
+>>>>>>> origin/accueil
 
     # Django
     'django.contrib.admin',
@@ -124,7 +127,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Ensure this points to your app's static folder:
+STATICFILES_DIRS = [
+    BASE_DIR / "insurance_app" / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
