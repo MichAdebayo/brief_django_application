@@ -1,6 +1,15 @@
 from django.db import models
+from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 class Login_and_SignUp(models.Model):
+    user_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+    
+
+class SignUp(models.Model):
     user_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
 
@@ -19,7 +28,3 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user_name
     
-
-class SignUp(models.Model):
-    user_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
