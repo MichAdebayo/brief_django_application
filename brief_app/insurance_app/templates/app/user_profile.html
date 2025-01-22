@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block  content %}
+    <h2>Welcome to your Profile </h2>
+
+    <form method="get" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+{% comment %} 
+    <ul>
+        {% for article in articles %}
+            <li class="Article">
+                <p><strong>{{article.titre }}</strong> - {{article.date_publication|date:"D M Y" }} - {{article.category }}</p>
+                <p>{{ article.contenu }}</p>
+
+            </li>
+        {% endfor %}
+    </ul> {% endcomment %}
+{% endblock %}
+
+
