@@ -20,9 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-    path('', include('insurance_app.urls'))     # To include the urls from the app
-=======
-    path('', include('insurance_app.urls')),
->>>>>>> origin/accueil
+    path('', include('insurance_app.urls')),     # To include the urls from the app
 ]

@@ -33,14 +33,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
-<<<<<<< HEAD
     
     # Others Django Apps
-    'tailwind',
-    'theme',
-    'django_browser_reload',
-=======
->>>>>>> origin/accueil
+    # 'tailwind',
+    # 'theme',
+    # 'django_browser_reload',
 
     # Django
     'django.contrib.admin',
@@ -140,6 +137,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 """Dorothee"""
+
 # Redirect to this URL after successful login
 LOGIN_REDIRECT_URL = '/'
 
@@ -151,7 +149,7 @@ LOGIN_URL = '/login/'
 
 
 # Tailwind Theme
-TAILWIND_APP_NAME = 'theme'
+# TAILWIND_APP_NAME = 'theme'
 
 
 INTERNAL_IPS = [

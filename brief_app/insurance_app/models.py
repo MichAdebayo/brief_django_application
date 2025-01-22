@@ -27,13 +27,6 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return self.user_name
-    
-<<<<<<< HEAD
-=======
-
-class SignUp(models.Model):
-    user_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
 
 
->>>>>>> origin/accueil
+
