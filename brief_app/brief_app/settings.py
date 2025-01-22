@@ -10,20 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load the environmental variables of fichier .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!9p0uxi*8#9rbs5xrlz1_8-4h@h5$tpwv(_b5&z@8+8ga42irb'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key') # Default value if not defined
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True' # Convert the string to boolean
 
 ALLOWED_HOSTS = []
 
@@ -131,6 +135,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "insurance_app" / "static",
 ]
 
+AUTH_USER_MODEL = 'insurance_app.UserProfile'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -139,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 """Dorothee"""
 
 # Redirect to this URL after successful login
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/user_profile/'
 
 # Redirect to this URL after logout
 LOGOUT_REDIRECT_URL = '/'
