@@ -12,6 +12,9 @@ from .forms import UserProfileForm, UserSignupForm, UserLoginForm
 class HomeView(TemplateView):
     template_name = 'insurance_app/home.html'         # Template for the home page
 
+class WelcomeView(TemplateView):
+    template_name = 'insurance_app/welcome.html'  
+
 class SignupView(CreateView):
     model = UserProfile
     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
@@ -29,7 +32,7 @@ class SignupView(CreateView):
         return super().form_valid(form)
 
 class CustomLoginView(LoginView):
-    form_class = UserLoginForm
+    #form_class = UserLoginForm
     template_name = 'insurance_app/login.html'  # Template for the login page
     success_url = reverse_lazy('home')     # Replace 'home' with the name of your desired URL
     redirect_authenticated_user = True  # Redirect already logged-in users

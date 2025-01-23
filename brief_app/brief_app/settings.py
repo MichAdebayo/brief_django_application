@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'insurance_app',
     
     # Others Django Apps
-    # 'tailwind',
-    # 'theme',
-    # 'django_browser_reload',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 
     # Django
     'django.contrib.admin',
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'brief_app.urls'
@@ -155,7 +156,7 @@ LOGIN_URL = '/login/'
 
 
 # Tailwind Theme
-# TAILWIND_APP_NAME = 'theme'
+TAILWIND_APP_NAME = 'theme'
 
 
 INTERNAL_IPS = [

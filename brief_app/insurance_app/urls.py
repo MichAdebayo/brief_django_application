@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import CustomLoginView, SignupView, HomeView, UserProfileView
+from .views import CustomLoginView, SignupView, HomeView, UserProfileView,WelcomeView
 from django.contrib.auth.views import LogoutView
 from django.views.generic.base import RedirectView
 
@@ -9,5 +9,6 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('user_profile/', UserProfileView.as_view(), name='user_profile'),
+    path('welcome/',WelcomeView.as_view(), name='welcome'),
     # path("__reload__/", include("django_browser_reload.urls")),
 ]

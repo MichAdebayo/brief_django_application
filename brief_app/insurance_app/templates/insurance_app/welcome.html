@@ -1,3 +1,4 @@
+{% extends 'insurance_app/base.html' %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -5,44 +6,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Assur'Amant</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Home Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div id="welcome-page" style="background-image: url('{% static 'images/homepage_background.png' %}');">
-        <div class="header">
-            <div class="buttons">
-                <a href="#" class="button">Sign Up</a>
-                <a href="#" class="button">Log In</a>
-            </div>
-        </div>
+    <div class="container min-h-screen">
+        <nav>
 
-        <div class="content">
-            <h1>Welcome to Assur'Amant</h1>
-        </div>
-
-        <!-- Info Bar Section -->
-        <div class="info-bar">
-            <div class="info-section">
-                <h3>Assur'Aimant</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Join Us</a></li>
-                </ul>
-            </div>
-            <div class="info-section">
-                <h3>Assur'Cares</h3>
-                <ul>
-                    <li><a href="#">Need a Quote</a></li>
-                    <li><a href="#">Need Help</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            Assur'Aimant &copy; 2025
-        </div>
+        <nav/>
     </div>
+
+
+
 </body>
 </html>
