@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key') # Default value if no
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True' # Convert the string to boolean
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -136,7 +136,7 @@ STATIC_URL = '/static/'
 
 # Ensure this points to your app's static folder:
 STATICFILES_DIRS = [
-    BASE_DIR / "theme" / "static",
+    BASE_DIR / "insurance_app" / "static",
 ]
 
 AUTH_USER_MODEL = 'insurance_app.UserProfile'

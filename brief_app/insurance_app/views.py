@@ -103,7 +103,7 @@ class SignupView(CreateView):
     model = UserProfile
     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
     template_name = 'insurance_app/signup.html'
-    success_url = reverse_lazy('test_login')
+    success_url = reverse_lazy('login')
     # redirect_authenticated_user = True  # Redirect already logged-in users
 
     def form_valid(self, form):
@@ -131,10 +131,10 @@ class CustomLoginView(LoginView):
             form.add_error(None, 'Invalid username or password.') # Add a general error message
             return self.form_invalid(form)
 
-    def get_success_url(self):
-        print("#########Get success URL called########")
-        success_url =  reverse_lazy('home')
-        return reverse_lazy('home')  # Redirect to a simple page
+    # def get_success_url(self):
+    #     print("#########Get success URL called########")
+    #     success_url =  reverse_lazy('home')
+    #     return reverse_lazy('home')  # Redirect to a simple page
 
 #################################################################################
 
