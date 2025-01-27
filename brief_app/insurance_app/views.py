@@ -73,22 +73,35 @@ class HealthAdvicesView(TemplateView):
 class CybersecurityAwarenessView(TemplateView):
     template_name = 'insurance_app/cybersecurity_awareness.html'
 
-class SignupView(CreateView):
-    model = UserProfile
-    form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-    template_name = 'insurance_app/signup.html'
-    success_url = reverse_lazy('login')
-    redirect_authenticated_user = True  # Redirect already logged-in users
+# class SignupView(CreateView):
+#     model = UserProfile
+#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
+#     template_name = 'insurance_app/signup.html'
+#     success_url = reverse_lazy('test_login')
+#     print("###########Signup success###########")
+#     # redirect_authenticated_user = True  # Redirect already logged-in users
 
-    def form_valid(self, form):         # Save the user to the database
-        self.object = form.save()
-        self.request.session['initial_user_profile'] = {
-            'username': self.object.username,
-            'email': self.object.email,
-            'password' : self.object.password,
-        }
-        return super().form_valid(form)
+#     def form_valid(self, form):         # Save the user to the database
+#         self.object = form.save()
+#         self.request.session['initial_user_profile'] = {
+#             'username': self.object.username,
+#             'email': self.object.email,
+#         }
+#         print("###########Form Valid success###########")
+#         return super().form_valid(form)
 
+# class TestLoginView(LoginView):
+#     template_name = 'insurance_app/login.html'  # Or a simple test template
+#     redirect_authenticated_user = True
+#     print("###########Login Page success###########")
+#     success_url =  reverse_lazy('home')
+#     print("###########I can go home###########")
+
+#     def get_success_url(self):
+#         print("#########Get success URL called########")
+#         success_url =  reverse_lazy('home')
+#         return reverse_lazy('home')  # Redirect to a simple page
+    
 class CustomLoginView(LoginView):
     #form_class = UserLoginForm
     template_name = 'insurance_app/login.html'  # Template for the login page
@@ -100,20 +113,23 @@ class UserProfileView(UpdateView): # LoginRequiredMixin,
     model = UserProfile # Specify the model to use
     form_class = UserProfileForm
     template_name = 'insurance_app/user_profile.html' # Specify the template
-    success_url = reverse_lazy('user_profile') 
+
+    # def get_success_url(self):
+    #      return reverse_lazy('user_profile', kwargs={'pk': self.request.user.pk})
+    
     # redirect_authenticated_user = True
 
-    def get_initial(self):
-        initial = super().get_initial()
-        if 'initial_user_profile' in self.request.session:
-            initial.update(self.request.session.pop('initial_user_profile'))
-            self.request.session.modified = True
-        return initial
+    # def get_initial(self):
+    #     initial = super().get_initial()
+    #     if 'initial_user_profile' in self.request.session:
+    #         initial.update(self.request.session.pop('initial_user_profile'))
+    #         self.request.session.modified = True
+    #     return initial
     
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, 'Your profile has been updated!')
-        return response
+    # def form_valid(self, form):
+    #     response = super().form_valid(form)
+    #     messages.success(self.request, 'Your profile has been updated!')
+    #     return response
   
     def get_object(self, queryset=None):
         return self.request.user.userprofile

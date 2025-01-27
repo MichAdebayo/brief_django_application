@@ -2,12 +2,14 @@ from django.urls import path, include
 from .views import CustomLoginView, SignupView, HomeView, UserProfileView,WelcomeView,AboutView, JoinUsView,ApplyView,TemplateView,apply,contact_view,HealthAdvicesView,CybersecurityAwarenessView
 from django.contrib.auth.views import LogoutView
 from django.views.generic.base import RedirectView
+from . import views
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('login/',CustomLoginView.as_view() , name='login'),
-    path('signup/', SignupView.as_view(), name='signup'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    # path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    # path('test_login/', TestLoginView.as_view(), name='test_login'),
+    # path('logout/', LogoutView.as_view(), name='logout'),
     path('user_profile/', UserProfileView.as_view(), name='user_profile'),
     #path('welcome/',WelcomeView.as_view(), name='welcome'),
     path('about/',AboutView.as_view(), name='about'),

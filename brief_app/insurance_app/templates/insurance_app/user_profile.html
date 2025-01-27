@@ -1,13 +1,105 @@
 {% extends "base.html" %}
 
-{% block  content %}
-    <h2>Welcome to your Profile </h2>
+{% block content %}
+<div id ="user-profile" class="form-container">
+    <h2 id="user-profile" class="account_settings">
+        Edit Your Personal Information
+    </h2>
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
+    <div class="d-flex justify-content-center mt-3">
+        <form method="post" action="" class="p-5 border rounded shadow">
+            {% csrf_token %}
+            
+            <div class="mb-5">
+                {{ form.as_p }}
+            </div>
+            
+            <div class="row text-center mt-3">
+                <div class="col-md-6">
+                    <button id="user-profile-save" type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <div class="col-md-6">
+                    <button id="user-profile-predict" type="submit" class="btn btn-secondary">Predict charges</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %} 
+{% endblock %} 
+
+{% comment %} 
+{% extends "base.html" %}
+{% load form_tags %}  <!-- Load the template tags -->
+    
+{% endblock content %}  {% endcomment %}
+
+        {% comment %} <div class="card overflow-hidden">
+            <div class="row no-gutters row-bordered row-border-light">
+                <div class="col-md-3 pt-0">
+                    <div class="list-group list-group-flush account-settings-links">
+                        <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">General</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
+                        <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-info">Info</a>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="account-general">
+                            <div class="card-body">
+                                {% for field in form %}
+                                    {% if field.name in 'username email first_name last_name' %}
+                                        <div class="form-group">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {{ field|add_class:'form-control' }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="account-change-password">
+                            <div class="card-body pb-2">
+                                {% for field in form %}
+                                    {% if field.name == 'password' %}
+                                        <div class="form-group">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {{ field|add_class:'form-control' }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="account-info">
+                            <div class="card-body pb-2">
+                                {% for field in form %}
+                                    {% if field.name in 'smoker region sex age weight height' %}
+                                        <div class="form-group">
+                                            <label class="form-label">{{ field.label }}</label>
+                                            {{ field|add_class:'form-control' }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-right mt-3">
+            <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+            <button type="button" class="btn btn-default">Cancel</button>
+        </div>
     </form>
+</div>
 
 {% if messages %}
     <ul class="messages">
@@ -17,16 +109,5 @@
     </ul>
 {% endif %}
 
-{% comment %} 
-    <ul>
-        {% for article in articles %}
-            <li class="Article">
-                <p><strong>{{article.titre }}</strong> - {{article.date_publication|date:"D M Y" }} - {{article.category }}</p>
-                <p>{{ article.contenu }}</p>
-
-            </li>
-        {% endfor %}
-    </ul> {% endcomment %}
-{% endblock %}
-
+{% endblock %} {% endcomment %} 
 
