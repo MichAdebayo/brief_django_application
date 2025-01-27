@@ -41,9 +41,24 @@ module.exports = {
          */
         // '../../**/*.py'
     ],
+
+
     theme: {
-        extend: {},
+        extend: {
+        colors: {
+          'custom-green': '#006f4e',
+          'custom-cyan': '#009b9d',
+          'custom-red': '#ed1c24',
+          'custom-white': '#ffffff',
+          'custom-beige': '#f5f5dc',
+      },
     },
+  },
+
+
+
+
+
     plugins: [
         /**
          * '@tailwindcss/forms' is the forms plugin that provides a minimal styling

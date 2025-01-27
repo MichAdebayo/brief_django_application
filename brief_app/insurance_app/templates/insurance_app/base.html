@@ -1,36 +1,97 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Page</title>
+    <title>Assur'Aimant</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+
+<body class="min-h-screen flex flex-col text-whitesmoke font-sans bg-[#FBFCFA] scroll-smooth">
+
     <!-- Header -->
-    <header class="bg-gray-900 text-white py-4">
-        <div class="container mx-auto flex justify-between items-center px-4">
+    <header class="bg-[#006f4e] text-white py-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
             <h1 class="text-2xl font-bold">Assur'Aimant</h1>
             <nav>
-                <ul class="flex space-x-6">
-                    <li><a href="#about" class="hover:text-gray-400">About Us</a></li>
-                    <li><a href="#join" class="hover:text-gray-400">Join Us</a></li>
-                    <li><a href="#services" class="hover:text-gray-400"> Get a Quote</a></li>
-                    <li><a href="#contact" class="hover:text-gray-400">Contact</a></li>
+                <ul class="flex space-x-8">
+                    <!-- Home -->
+                    <li>
+                        <a href="{% url 'home' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'home' %}
+                                bg-[#ed1c24] text-white shadow-lg
+                            {% else %}
+                                hover:bg-[#ed1c24] hover:text-white
+                            {% endif %}">
+                            Home
+                        </a>
+                    </li>
+                    <!-- About Us -->
+                    <li>
+                        <a href="{% url 'about' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'about' %}
+                                bg-[#ed1c24] text-white shadow-lg
+                            {% else %}
+                                hover:bg-[#ed1c24] hover:text-white
+                            {% endif %}">
+                            About Us
+                        </a>
+                    </li>
+                    <!-- Join Us -->
+                    <li>
+                        <a href="{% url 'join_us' %}" class="px-4 py-2 rounded-md transition 
+                            {% if request.resolver_match.url_name == 'join_us' %}
+                                bg-[#ed1c24] text-white shadow-lg
+                            {% else %}
+                                hover:bg-[#ed1c24] hover:text-white
+                            {% endif %}">
+                            Join Us
+                        </a>
+                    </li>
+                    <!-- Get a Quote -->
+                    <li>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == '#' %}
+                                bg-[#ed1c24] text-white shadow-lg
+                            {% else %}
+                                hover:bg-[#ed1c24] hover:text-white
+                            {% endif %}">
+                            Get a Quote
+                        </a>
+                    </li>
+                    <!-- Contact Us -->
+                    <li>
+                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'contact' %}
+                                bg-[#ed1c24] text-white shadow-lg
+                            {% else %}
+                                hover:bg-[#ed1c24] hover:text-white
+                            {% endif %}">
+                            Contact Us
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
-        <main>
-    
-        </main>
+
+    <!-- Main Content -->
+    <main class="my-10">
+        {% block content %} {% endblock %}
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-4">
+    <footer class="bg-[#006f4e] text-white py-6 mt-10">
         <div class="container mx-auto text-center">
-            &copy; 2025 Assur'Aimant. All rights reserved.
+            <p>&copy; 2025 Assur'Aimant. All rights reserved.</p>
+            <nav class="mt-4">
+                <a href="{% url 'health_advices' %}" class="text-gray-300 hover:text-white mx-2">Health Advices</a> |
+                <a href="{% url 'cybersecurity_awareness' %}" class="text-gray-300 hover:text-white mx-2">Cybersecurity Awareness</a>
+            </nav>
         </div>
     </footer>
+
 </body>
+
 </html>
