@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect # type: ignore
+from django.shortcuts import render, redirect 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView #, LogoutView
 from django.views.generic.edit import CreateView, UpdateView
@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from .models import UserProfile, Job, ContactMessage
-from .forms import UserProfileForm, UserSignupForm, UserLoginForm, ApplicationForm
+from .forms import UserProfileForm, UserSignupForm, UserLoginForm, ApplicationForm, ChangePasswordForm
 from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
@@ -15,15 +15,22 @@ import numpy as np
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
+from django.contrib.auth import authenticate, login
+from django.conf import settings
+from django.views import View 
+
 
 # Create your views here.
 class HomeView(TemplateView):
     template_name = 'insurance_app/home.html'   
           # Template for the home page
 
+
 #template for about us 
 class AboutView(TemplateView):
     template_name= 'insurance_app/about.html'
+
+
 #Template for join us view 
 class JoinUsView(TemplateView):
     template_name = 'insurance_app/join_us.html'
@@ -32,8 +39,9 @@ class JoinUsView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['jobs'] = Job.objects.all()
         return context
-#### apply view for the join us view
+    
 
+#### apply view for the join us view
 class ApplyView(TemplateView):
     template_name = 'apply_thank_you.html'
 
@@ -50,8 +58,17 @@ class ApplyView(TemplateView):
         
         return render(request, self.template_name, {'form': form})
 
-# Logic to save the application data (e.g., store it in the database or email it)
 
+#templates  for Assur'Cares Section
+class HealthAdvicesView(TemplateView):
+    template_name = 'insurance_app/health_advices.html'
+
+
+class CybersecurityAwarenessView(TemplateView):
+    template_name = 'insurance_app/cybersecurity_awareness.html'
+
+
+# Logic to save the application data (e.g., store it in the database or email it)
 def apply(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -59,27 +76,35 @@ def apply(request):
         job_id = request.POST.get('job_id')
         resume = request.FILES.get('resume')
 
-        
-
         return HttpResponse("Application submitted successfully!")
     return redirect('join_us')
 
-#class WelcomeView(TemplateView):
-    #template_name = 'insurance_app/welcome.html'  
-#templates  for Assur'Cares Section
-class HealthAdvicesView(TemplateView):
-    template_name = 'insurance_app/health_advices.html'
+#To handle the messages submission
+def contact_view(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
 
-class CybersecurityAwarenessView(TemplateView):
-    template_name = 'insurance_app/cybersecurity_awareness.html'
+        # Save the message to the database
+        ContactMessage.objects.create(name=name, email=email, message=message)
+        
+        # Show a success message
+        messages.success(request, "Your message has been sent successfully!")
+        return redirect('contact')  # Replace 'contact' with the name of your URL pattern
+    
+    return render(request, "insurance_app/contact_form.html")
 
-# class SignupView(CreateView):
-#     model = UserProfile
-#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-#     template_name = 'insurance_app/signup.html'
-#     success_url = reverse_lazy('test_login')
-#     print("###########Signup success###########")
-#     # redirect_authenticated_user = True  # Redirect already logged-in users
+
+#################################################################################
+# REPLACE WITH DOROTHEE'S CODE
+
+class SignupView(CreateView):
+    model = UserProfile
+    form_class = UserSignupForm  # Utilisez un formulaire personnalisé
+    template_name = 'insurance_app/signup.html'
+    success_url = reverse_lazy('test_login')
+    # redirect_authenticated_user = True  # Redirect already logged-in users
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -106,20 +131,17 @@ class CustomLoginView(LoginView):
             form.add_error(None, 'Invalid username or password.') # Add a general error message
             return self.form_invalid(form)
 
-#     def get_success_url(self):
-#         print("#########Get success URL called########")
-#         success_url =  reverse_lazy('home')
-#         return reverse_lazy('home')  # Redirect to a simple page
-    
-class CustomLoginView(LoginView):
-    #form_class = UserLoginForm
-    template_name = 'insurance_app/login.html'  # Template for the login page
-    success_url = reverse_lazy('home')     # Replace 'home' with the name of your desired URL
-    redirect_authenticated_user = True  # Redirect already logged-in users
+    def get_success_url(self):
+        print("#########Get success URL called########")
+        success_url =  reverse_lazy('home')
+        return reverse_lazy('home')  # Redirect to a simple page
 
-# Create your views here.
-class UserProfileView(UpdateView): # LoginRequiredMixin, 
-    model = UserProfile # Specify the model to use
+#################################################################################
+
+
+# Template for user profile view
+class UserProfileView(LoginRequiredMixin, UpdateView): 
+    model = UserProfile
     form_class = UserProfileForm
     template_name = 'insurance_app/profile.html'
     success_url = reverse_lazy('profile')
@@ -128,41 +150,53 @@ class UserProfileView(UpdateView): # LoginRequiredMixin,
         # Return the UserProfile object for the logged-in user
         return self.request.user
     
-
-
-    # def get_initial(self):
-    #     initial = super().get_initial()
-    #     if 'initial_user_profile' in self.request.session:
-    #         initial.update(self.request.session.pop('initial_user_profile'))
-    #         self.request.session.modified = True
-    #     return initial
+    def form_valid(self, form):
+            # Save the form and display a success message
+            response = super().form_valid(form)
+            messages.success(self.request, 'Your profile has been updated!')
+            return response
     
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
-    #     messages.success(self.request, 'Your profile has been updated!')
-    #     return response
-  
-    def get_object(self, queryset=None):
-        return self.request.user.userprofile
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = ChangePasswordForm  
+    template_name = 'insurance_app/changepassword.html'
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        # Save the new password
+        response = super().form_valid(form)
+        # Add a success message
+        messages.success(self.request, 'Your password has been changed successfully!')
+        return response
 
 
+# class PredictChargesView(LoginRequiredMixin, View):
+#     def get(self, request, *args, **kwargs):
+#         # Fetch the user's profile data
+#         user = request.user
 
+#         # Prepare input data for the model
+#         age = user.age
+#         sex_encoded = 1 if user.sex == 'Male' else 0
+#         bmi = user.weight / ((user.height / 100) ** 2)  # Calculate BMI
+#         children = user.num_children
+#         smoker_encoded = 1 if user.smoker == 'Yes' else 0
 
-#To handle the messages submission
-def contact_view(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
+#         input_data = [[age, sex_encoded, bmi, children, smoker_encoded]]
 
-        # Save the message to the database
-        ContactMessage.objects.create(name=name, email=email, message=message)
-        
-        # Show a success message
-        messages.success(request, "Your message has been sent successfully!")
-        return redirect('contact')  # Replace 'contact' with the name of your URL pattern
-    
-    return render(request, "insurance_app/contact_form.html")
+#         # Load the ML model
+#         model_path = os.path.join(settings.BASE_DIR, 'model.pkl')
+#         with open(model_path, 'rb') as f:
+#             model = pickle.load(f)
+
+#         # Predict charges
+#         predicted_charges = model.predict(input_data)[0]
+
+#         # Render the result
+#         return render(request, 'predict_charges.html', {
+#             'predicted_charges': round(predicted_charges, 2)
+#         })
+
 
 
 
