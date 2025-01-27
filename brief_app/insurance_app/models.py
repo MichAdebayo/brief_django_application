@@ -27,6 +27,7 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+
 #For the join us job application area
  
 class JobApplication(models.Model):
