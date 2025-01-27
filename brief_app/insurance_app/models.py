@@ -19,9 +19,10 @@ class UserProfile(AbstractUser):
     age = models.IntegerField(default=False)
     weight = models.IntegerField(default=False)
     height = models.IntegerField(default=False) 
-    smoker = models.CharField(blank=True, choices=SmokerType.choices, max_length=10)
-    region = models.CharField(blank=True, choices=RegionType.choices, max_length=10)
-    sex = models.CharField(blank=True, choices=SexType.choices, max_length=10)
+    num_children = models.IntegerField(default=False) 
+    smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
+    region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
+    sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)
 
     def __str__(self):
         return self.username
@@ -36,7 +37,8 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return self.name
-from django.db import models
+    
+
 
 #To create a list of jobs from the admin page
 

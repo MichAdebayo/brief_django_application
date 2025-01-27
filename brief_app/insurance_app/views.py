@@ -90,12 +90,15 @@ class CybersecurityAwarenessView(TemplateView):
 #         print("###########Form Valid success###########")
 #         return super().form_valid(form)
 
-# class TestLoginView(LoginView):
-#     template_name = 'insurance_app/login.html'  # Or a simple test template
-#     redirect_authenticated_user = True
-#     print("###########Login Page success###########")
-#     success_url =  reverse_lazy('home')
-#     print("###########I can go home###########")
+class TestLoginView(LoginView):
+    template_name = 'insurance_app/login.html'  
+    # redirect_authenticated_user = True
+    success_url =  reverse_lazy('profile')
+    print("###########TestLogin success###########")
+
+    
+# class CustomLoginView(LoginView):
+#     template_name= 'insurance_app/login.html'  # Template for the login page
 
 #     def get_success_url(self):
 #         print("#########Get success URL called########")
@@ -112,12 +115,13 @@ class CustomLoginView(LoginView):
 class UserProfileView(UpdateView): # LoginRequiredMixin, 
     model = UserProfile # Specify the model to use
     form_class = UserProfileForm
-    template_name = 'insurance_app/user_profile.html' # Specify the template
+    template_name = 'insurance_app/profile.html' # 'insurance_app/user_profile.html'
+    success_url = reverse_lazy('profile')
 
-    # def get_success_url(self):
-    #      return reverse_lazy('user_profile', kwargs={'pk': self.request.user.pk})
+    # def get_object(self, queryset=None):
+    #      return self.request.user.userprofile
     
-    # redirect_authenticated_user = True
+
 
     # def get_initial(self):
     #     initial = super().get_initial()

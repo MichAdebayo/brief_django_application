@@ -37,6 +37,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
+    'crispy_forms',
+    'crispy_bootstrap5',
     
     # Others Django Apps
     'tailwind',
@@ -51,6 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# TAILWIND_APP_NAME = 'theme'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,9 +83,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ], 
-            'libraries': {
-                'form_tags': 'insurance_app.templatetags.form_tags', 
-            },
         },
     },
 ]
@@ -149,7 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 """Dorothee"""
 
 # Redirect to this URL after successful login
-LOGIN_REDIRECT_URL = '/user_profile/'
+LOGIN_REDIRECT_URL = '/profile/'
 
 # Redirect to this URL after logout
 LOGOUT_REDIRECT_URL = '/'

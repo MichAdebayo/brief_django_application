@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {# Ensure you have a base.html #}
+{% load crispy_forms_tags %}
+
+**profile.html** 
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-4">Edit Information</h1> 
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6">
+                  {{ form.first_name|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                  {{ form.last_name|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ form.username|as_crispy_field }}
+                  </div>
+                  <div class="col-6">
+                    {{ form.email|as_crispy_field }}
+                  </div>
+                  <div class="col-6">
+                    {{ form.age|as_crispy_field }}
+                  </div>
+                  <div class="col-6">
+                    {{ form.sex|as_crispy_field }}
+                  </div>
+                  <div class="col-6">
+                    {{ form.weight|as_crispy_field }}
+                  </div>
+                  <div class="col-6">
+                    {{ form.height|as_crispy_field }}
+                  </div>
+                {{ form.region|as_crispy_field }}
+                {{ form.smoker|as_crispy_field }}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
+            <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
+            <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
+        </form>
+    </div>
+{% endblock %}
+
+
+{% comment %} {% block content %}
+    <div class="container">
+        <h1 class="mt-4">Edit Information</h1> 
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="crispy-form"> 
+                {{ form|crispy }}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
+            <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
+            <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
+        </form>
+    </div>
+{% endblock %} {% endcomment %}
