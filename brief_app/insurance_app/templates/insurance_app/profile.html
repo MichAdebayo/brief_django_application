@@ -1,0 +1,81 @@
+{% load static %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Couleurs personnalisées */
+        .bg-primary {
+            background-color: #1d1b1e; /* Fond principal */
+        }
+        .bg-secondary {
+            background-color: #221e1e; /* Fond du formulaire */
+        }
+        .bg-custom {
+            background-color: #a37a41; /* Couleur personnalisée */
+        }
+        .hover-bg-custom:hover {
+            background-color: #8c6936; /* Couleur légèrement plus foncée pour le hover */
+        }
+    </style>
+</head>
+<body class="bg-primary flex items-center justify-center min-h-screen">
+    <div class="bg-secondary text-white rounded-lg shadow-lg p-8 w-full max-w-2xl">
+        <!-- Titre de la page -->
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center w-36 h-36 mx-auto">
+                <img src="{% static 'images/logo_assuraimant_sfcb.svg' %}" alt="Logo AssurAimant" class="w-full h-full object-contain">
+            </div>
+            <h2 class="text-2xl font-bold">Welcome to Your Profile</h2>
+        </div>
+
+        <!-- Formulaire de mise à jour -->
+        <form method="post" action="" class="space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="w-full py-3 bg-custom hover-bg-custom rounded text-sm font-bold transition duration-200">
+                Save Changes
+            </button>
+        </form>
+
+        <!-- Messages Flash -->
+        {% if messages %}
+            <ul class="mt-6">
+                {% for message in messages %}
+                    <li class="p-3 rounded text-sm 
+                        {% if message.tags == 'success' %}bg-green-500 text-white{% endif %}
+                        {% if message.tags == 'error' %}bg-red-500 text-white{% endif %}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Liste des Articles -->
+        {% if articles %}
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4">Your Articles</h3>
+                <ul class="space-y-4">
+                    {% for article in articles %}
+                        <li class="bg-gray-700 p-4 rounded-lg shadow">
+                            <p class="text-lg font-bold">{{ article.titre }}</p>
+                            <p class="text-sm text-gray-400">
+                                Published on {{ article.date_publication|date:"D M Y" }} - Category: {{ article.category }}
+                            </p>
+                            <p class="mt-2">{{ article.contenu }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="text-gray-400 text-center mt-8">You have not published any articles yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %}
+

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'insurance_app',
     
     # Others Django Apps
-    # 'tailwind',
+    'tailwind',
     # 'theme',
     # 'django_browser_reload',
 
@@ -64,10 +64,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'brief_app.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,9 +133,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Ensure this points to your app's static folder:
-STATICFILES_DIRS = [
-    BASE_DIR / "insurance_app" / "static",
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 AUTH_USER_MODEL = 'insurance_app.UserProfile'
 
@@ -145,10 +145,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 """Dorothee"""
 
 # Redirect to this URL after successful login
-LOGIN_REDIRECT_URL = '/user_profile/'
+LOGIN_REDIRECT_URL = '/profile/'
 
 # Redirect to this URL after logout
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 
 # Optional: URL for the login page (used by @login_required decorator)
 LOGIN_URL = '/login/'

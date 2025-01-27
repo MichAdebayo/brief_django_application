@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>InsuranceCo</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+	<nav class="bg-blue-600 text-white p-4">
+		<div class="container mx-auto flex justify-between items-center">
+			<!-- Logo -->
+			<a href="/" class="text-2xl font-bold">InsuranceCo</a>
+
+			<!-- Navigation Links -->
+			<div>
+				{% if user.is_authenticated %}
+					<!-- Links for Logged-In Users -->
+					<a href="/profile/" class="mr-4 hover:underline">Profile</a>
+					<a href="/logout/" class="hover:underline">Logout</a>
+				{% else %}
+					<!-- Links for Guests -->
+					<a href="/login/" class="mr-4 hover:underline">Login</a>
+					<a href="/signup/" class="hover:underline">Sign Up</a>
+				{% endif %}
+			</div>
+		</div>
+	</nav>
+	<!-- Page Content -->
+	<div class="container mx-auto mt-8">
+		{% block content %}
+		{% endblock %}
+	</div>
+</body>
+</html>

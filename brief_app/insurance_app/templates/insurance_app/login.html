@@ -1,14 +1,60 @@
-<!DOCTYPE html>
-<html>
+{% load static %}
+
+{% block content %}
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Couleurs personnalisées */
+        .bg-primary {
+            background-color: #1d1b1e; /* Fond principal */
+        }
+        .bg-secondary {
+            background-color: #221e1e; /* Fond du formulaire */
+        }
+        .bg-custom {
+            background-color: #a37a41; /* Couleur personnalisée */
+        }
+        .hover-bg-custom:hover {
+            background-color: #8c6936; /* Couleur légèrement plus foncée pour le hover */
+        }
+    </style>
 </head>
-<body>
-    <h2>Login</h2>
-    <form method="post">
+<body class="bg-primary flex items-center justify-center min-h-screen">
+    <div class="bg-secondary text-white rounded-lg shadow-lg p-8 w-full max-w-sm">
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center w-36 h-36 mx-auto">
+                <img src="{% 'images/logo_assuraimant_sfcb.svg' %}" alt="Logo AssurAimant" class="w-full h-full object-contain">
+            </div>
+            <h2 class="text-2xl font-bold">Log In to Your Account</h2>
+        </div>
+    <form method="post" action="{% url 'login' %}" class="space-y-4">
         {% csrf_token %}
-        {{ form.as_p }} <!-- Render the login form -->
-        <button type="submit">Login</button>
+        <input type="text" name="username" placeholder="Enter your username" 
+                class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-amber-600" required>
+        <div class="relative">
+            <input type="password" name="password" placeholder="Enter your password" 
+                    class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-marron-500" required>
+            <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            </button>
+        </div>
+        <button type="submit" class="w-full py-3 bg-custom hover-bg-custom rounded text-sm font-bold transition duration-200">
+            Log In
+        </button>
     </form>
+        <p class="text-center text-gray-400 text-sm mt-4">
+            Don't have an account? <a href="{% url 'signup' %}" class="text-custom hover:underline">Sign Up</a>
+        </p>
+    </div>
 </body>
-</html>
+
+{% endblock %}
