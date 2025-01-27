@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {# Ensure you have a base.html #}
+{% extends "insurance_app/base.html" %} 
+{% load static %} 
 
 **profile.html** 
 
@@ -191,73 +192,3 @@
         </div>
     </div>
 {% endblock %}
-
-
-{% comment %} {% block content %}
-    <div class="container">
-        <h1 class="mt-4">Edit Information</h1> 
-
-        <div class="d-flex justify-content-center mt-3">
-            <form method="post" action="" class="p-5 border rounded shadow" novalidate>
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-6">
-                    {{ form.first_name|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                    {{ form.last_name|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.username|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.email|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.age|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.num_children|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.height|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.weight|as_crispy_field }}
-                    </div>
-                    {{ form.sex|as_crispy_field }}
-                    {{ form.region|as_crispy_field }}
-                    {{ form.smoker|as_crispy_field }}
-                </div>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
-                <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
-                <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
-            </form>
-        </div>
-    {% endblock %} {% endcomment %}
-
-
-{% comment %}  {% endcomment %} {% comment %}{% endcomment %}
-{% comment %}  {% endcomment %}
-{% comment %}  {% endcomment %}
-
-
-
-{% comment %} {% block content %}
-    <div class="container">
-        <h1 class="mt-4">Edit Information</h1> 
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="crispy-form"> 
-                {{ form|crispy }}
-            </div>
-            <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
-            <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
-            <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
-        </form>
-    </div>
-{% endblock %} {% endcomment %}
-
-
-npx tailwindcss -i ./brief_app/theme/static_src/src/input.css -o ./brief_app/theme/static_src/src/styles.css
