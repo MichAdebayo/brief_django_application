@@ -50,14 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Team App
-    'insurance_app',
-
-    # Others Django Apps
-    'theme',
-    'tailwind',
-    # 'django_browser_reload',
 ]
 
 TAILWIND_APP_NAME = 'theme'
