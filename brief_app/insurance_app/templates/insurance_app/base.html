@@ -11,7 +11,7 @@
 <body class="min-h-screen flex flex-col text-whitesmoke font-sans bg-[#FBFCFA] scroll-smooth">
 
     <!-- Header -->
-    <header class="bg-[#006f4e] text-white py-4">
+    <header class="bg-[#006f4e] text-white py-4 fixed w-full top-0 z-50">  <!-- Added fixed, w-full, top-0, z-50 -->
         <div class="container mx-auto flex justify-between items-center px-6">
             <h1 class="text-2xl font-bold">Assur'Aimant</h1>
             <nav>
@@ -77,7 +77,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="my-10">
+    <main class="my-10 pt-14">
         {% block content %} {% endblock %}
     </main>
 

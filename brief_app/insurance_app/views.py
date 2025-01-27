@@ -6,18 +6,17 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from .models import UserProfile, Job, ContactMessage
-from .forms import UserProfileForm, UserSignupForm, UserLoginForm, ApplicationForm, ChangePasswordForm
+from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm
 from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
 import json
-import numpy as np
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 from django.contrib.auth import authenticate, login
 from django.conf import settings
 from django.views import View 
+import pandas as pd
 
 
 # Create your views here.
@@ -170,33 +169,123 @@ class ChangePasswordView(PasswordChangeView):
         return response
 
 
-# class PredictChargesView(LoginRequiredMixin, View):
-#     def get(self, request, *args, **kwargs):
-#         # Fetch the user's profile data
-#         user = request.user
+class PredictChargesView(LoginRequiredMixin, View):
+    template_name = 'insurance_app/predict.html'
+    success_url = reverse_lazy('predict')
 
-#         # Prepare input data for the model
-#         age = user.age
-#         sex_encoded = 1 if user.sex == 'Male' else 0
-#         bmi = user.weight / ((user.height / 100) ** 2)  # Calculate BMI
-#         children = user.num_children
-#         smoker_encoded = 1 if user.smoker == 'Yes' else 0
+    def get(self, request, *args, **kwargs):
+        # Fetch the user's profile data
+        user = self.request.user
 
-#         input_data = [[age, sex_encoded, bmi, children, smoker_encoded]]
+        # Prepare input data for the model
+        age = user.age
+        bmi = user.weight / ((user.height / 100) ** 2)  # Calculate BMI
+        children = user.num_children
+        smoker = user.smoker
 
-#         # Load the ML model
-#         model_path = os.path.join(settings.BASE_DIR, 'model.pkl')
-#         with open(model_path, 'rb') as f:
-#             model = pickle.load(f)
+        personal_data = {"age": age, "bmi": bmi, "smoker": smoker, "children": children}
 
-#         # Predict charges
-#         predicted_charges = model.predict(input_data)[0]
+        # Preprocess the data
+        preprocessed_data = self.preprocess_data(personal_data)
 
-#         # Render the result
-#         return render(request, 'predict_charges.html', {
-#             'predicted_charges': round(predicted_charges, 2)
-#         })
+        # Debugging: Print the preprocessed data
+        print("Preprocessed Data:")
+        print(preprocessed_data)
+
+        # Load the model
+        model = self.load_model()
+        if model is None:
+            return render(request, self.template_name, {"error": "Failed to load the model."})
+
+        # Predict charges
+        predicted_charges = model.predict(preprocessed_data)
+
+        # Debugging: Print the predicted charges
+        print("Predicted Charges:")
+        print(predicted_charges)
+
+        # Render the template with the predicted charges
+        return render(request, self.template_name, {"predicted_charges": round(predicted_charges[0], 2)})
+
+    def categorize_bmi(self, bmi):
+        if bmi < 18.5:
+            return "under_weight"
+        elif 18.5 <= bmi < 25:
+            return "normal_weight"
+        elif 25 <= bmi < 30:
+            return "over_weight"
+        else:
+            return "obese"
+
+    def categorize_age(self, age):
+        if 18 < age < 26:
+            return "young_adult"
+        elif 26 <= age < 36:
+            return "early_adulthood"
+        elif 36 <= age < 46:
+            return "mid_adulthood"
+        else:
+            return "late_adulthood"
+
+    def preprocess_data(self, data):
+        # Define the expected columns (must match the model's input requirements)
+        expected_columns = [
+            "smoker",
+            "age",
+            "bmi",
+            "age_category_young_adult",
+            "age_category_early_adulthood",
+            "bmi_category_over_weight",
+            "bmi_category_obese",
+            "children_str_0",
+        ]
+
+        # Create a DataFrame from the input data
+        df = pd.DataFrame([data])
+
+        # Convert smoker to binary (1 for "Yes", 0 for "No")
+        df["smoker"] = df["smoker"].map({"Yes": 1, "No": 0})
+
+        # Categorize age and bmi
+        df["age_category"] = df["age"].apply(self.categorize_age)
+        df["bmi_category"] = df["bmi"].apply(self.categorize_bmi)
+
+        # Convert children to string (for one-hot encoding)
+        df["children_str"] = df["children"].apply(lambda x: str(x))
+
+        # Perform one-hot encoding for categorical columns
+        df = pd.get_dummies(df, columns=["age_category", "bmi_category", "children_str"], dtype=(int))
+
+        # Ensure all expected columns are present
+        for col in expected_columns:
+            if col not in df.columns:
+                df[col] = 0  # Add missing columns with default value 0
+
+        # Reorder columns to match the model's expectations
+        df = df[expected_columns]
+
+        # Debugging: Print the final preprocessed DataFrame
+        print("Final Preprocessed DataFrame:")
+        print(df)
+
+        return df
+
+    def load_model(self):
+        try:
+            model_path = os.path.join(settings.BASE_DIR, 'insurance_app/model/model.pkl')
+            with open(model_path, "rb") as file:
+                model = pickle.load(file)
+            return model
+        except FileNotFoundError:
+            print("Error: The model file 'model.pkl' was not found.")
+            return None
+        except pickle.UnpicklingError:
+            print("Error: The file could not be unpickled. Ensure it is a valid pickle file.")
+            return None
 
 
+#####
 
+# (f"Hello {first_name} {last_name}, here is the prediction:")
+# (f"Predicted Insurance Charges: ${prediction[0]:,.2f}")
 

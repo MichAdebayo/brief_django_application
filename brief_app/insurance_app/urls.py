@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, JoinUsView, ApplyView, TemplateView, apply,contact_view, HealthAdvicesView, CybersecurityAwarenessView, ChangePasswordView
+from .views import CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, JoinUsView, ApplyView, TemplateView, apply,contact_view, HealthAdvicesView, CybersecurityAwarenessView, ChangePasswordView, PredictChargesView
 from django.contrib.auth.views import LogoutView
 from django.views.generic.base import RedirectView
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('health-advices/', HealthAdvicesView.as_view(), name='health_advices'),
     path('cybersecurity-awareness/',CybersecurityAwarenessView.as_view(), name='cybersecurity_awareness'),
     path('changepassword/', ChangePasswordView.as_view(), name='changepassword'),
+    path('predict-charges/', PredictChargesView.as_view(), name='predict'),
 ]

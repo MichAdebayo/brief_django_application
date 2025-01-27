@@ -58,15 +58,3 @@ class ChangePasswordForm(PasswordChangeForm):
             self.fields[field].widget.attrs.update({
                 'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400',
             })
-
-
-# class PredictChargesForm(forms.ModelForm):
-
-#     with open('brief_app/model.pkl') as file:
-
-
-#     class Meta:
-#         model = UserProfile
-#         fields = ['first_name', 'last_name', 'username',
-#                   'email', 'smoker', 'region', 'sex', 'num_children',
-#                   'age', 'weight', 'height']
