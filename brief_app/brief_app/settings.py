@@ -52,11 +52,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Team App
+    'insurance_app',
+
+    # Others Django Apps
+    'theme',
+    'tailwind',
+    # 'django_browser_reload',
 ]
 
-# TAILWIND_APP_NAME = 'theme'
+TAILWIND_APP_NAME = 'theme'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -139,7 +146,7 @@ STATIC_URL = '/static/'
 
 # Ensure this points to your app's static folder:
 STATICFILES_DIRS = [
-    BASE_DIR / "insurance_app" / "static",
+    BASE_DIR / "theme" / "static",
 ]
 
 AUTH_USER_MODEL = 'insurance_app.UserProfile'

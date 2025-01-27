@@ -1,44 +1,38 @@
-{% load static %}
+{% load static tailwind_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Assur'Aimant{% endblock %}</title> {# Removed extra spaces #}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {# Moved styles.css link here #}
-        {% block extra_head %}{% endblock %}
-    </head>
-    <body class="d-flex flex-column min-vh-100">
-        {% include 'includes/header.html' %} 
-        <main class="container"> {# Added container to main #}
-            {% block content %}{% endblock %}
-        </main>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Assur'Aimant{% endblock %}</title>
 
-        <footer class="mt-auto"> {# Push footer to bottom #}
-            <div class="container">
-                <p class="text-center">&copy; Assur'Aimant 2025{{ current_year }}</p> 
-            </div>
-        </footer>
-    
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var currentYear = new Date().getFullYear();
-                document.getElementById('current_year').textContent = currentYear;
-            });
-        </script>
-
-    {% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Your custom CSS (if needed) -->
+    {% block extra_head %}{% endblock %}  <!-- Extra head content -->
 </head>
-<body>
-    {% include 'includes/header.html' %}
-    <main>
+<body class="bg-gray-50 font-sans leading-normal tracking-normal flex flex-col min-h-screen">
+    <!-- Header -->
+    {% include 'insurance_app/includes/header.html' %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto flex-grow p-4">
         {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p id="user-profile-footer">&copy; Assur'Aimant 2025 </p>
+
+    <!-- Footer -->
+    <footer class="mt-auto bg-white shadow-md py-4">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-700">&copy; Assur'Aimant <span id="current_year">{{ current_year }}</span></p>
+        </div>
     </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var currentYear = new Date().getFullYear();
+            document.getElementById('current_year').textContent = currentYear;
+        });
+    </script>
 </body>
-</html> {% endcomment %}
+</html>

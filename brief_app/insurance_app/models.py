@@ -3,18 +3,18 @@ from django.contrib.auth.models import AbstractUser
 
 class UserProfile(AbstractUser):
     class SmokerType(models.TextChoices):
-        YES = 'Yes'
-        NO = 'No'
+        YES = 'Yes', 'Yes'
+        NO = 'No', 'No'
 
     class RegionType(models.TextChoices):
-        NORTHEAST = 'Northeast'
-        NORTHWEST = 'Northwest'
-        SOUTHEAST = 'Southeast'
-        SOUTHWEST = 'Southwest'
+        NORTHEAST = 'Northeast', 'Northeast'
+        NORTHWEST = 'Northwest', 'Northwest'
+        SOUTHEAST = 'Southeast', 'Southeast'
+        SOUTHWEST = 'Southwest', 'Southwest'
 
     class SexType(models.TextChoices):
-        MALE = 'Male'
-        FEMALE = 'Female'
+        MALE = 'Male', 'Male'
+        FEMALE = 'Female', 'Female'
 
     age = models.IntegerField(default=False)
     weight = models.IntegerField(default=False)

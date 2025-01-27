@@ -2,7 +2,6 @@ from django.urls import path, include
 from .views import CustomLoginView, SignupView, HomeView, UserProfileView,WelcomeView,AboutView, JoinUsView,ApplyView,TemplateView,apply,contact_view,HealthAdvicesView,CybersecurityAwarenessView
 from django.contrib.auth.views import LogoutView
 from django.views.generic.base import RedirectView
-from . import views
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
@@ -21,4 +20,3 @@ urlpatterns = [
     path('cybersecurity-awareness/',CybersecurityAwarenessView.as_view(), name='cybersecurity_awareness'),
 # path("__reload__/", include("django_browser_reload.urls")),
 ]
-

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView #, LogoutView
+from django.contrib.auth.views import LoginView, PasswordChangeView #, LogoutView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -81,24 +81,30 @@ class CybersecurityAwarenessView(TemplateView):
 #     print("###########Signup success###########")
 #     # redirect_authenticated_user = True  # Redirect already logged-in users
 
-#     def form_valid(self, form):         # Save the user to the database
-#         self.object = form.save()
-#         self.request.session['initial_user_profile'] = {
-#             'username': self.object.username,
-#             'email': self.object.email,
-#         }
-#         print("###########Form Valid success###########")
-#         return super().form_valid(form)
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data['password'])
+        user.save()
+        return super().form_valid(form)
 
-class TestLoginView(LoginView):
-    template_name = 'insurance_app/login.html'  
-    # redirect_authenticated_user = True
-    success_url =  reverse_lazy('profile')
-    print("###########TestLogin success###########")
 
-    
-# class CustomLoginView(LoginView):
-#     template_name= 'insurance_app/login.html'  # Template for the login page
+class CustomLoginView(LoginView):
+    template_name = 'insurance_app/login.html' 
+    success_url = reverse_lazy('profile')
+    def form_valid(self, form):
+        # Authenticate the user
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=username, password=password)
+
+        if user is not None:
+            # Log in the user and redirect
+            login(self.request, user)
+            return super().form_valid(form)
+        else:
+            # Invalid credentials, show error message
+            form.add_error(None, 'Invalid username or password.') # Add a general error message
+            return self.form_invalid(form)
 
 #     def get_success_url(self):
 #         print("#########Get success URL called########")
@@ -115,11 +121,12 @@ class CustomLoginView(LoginView):
 class UserProfileView(UpdateView): # LoginRequiredMixin, 
     model = UserProfile # Specify the model to use
     form_class = UserProfileForm
-    template_name = 'insurance_app/profile.html' # 'insurance_app/user_profile.html'
+    template_name = 'insurance_app/profile.html'
     success_url = reverse_lazy('profile')
 
-    # def get_object(self, queryset=None):
-    #      return self.request.user.userprofile
+    def get_object(self, queryset=None):
+        # Return the UserProfile object for the logged-in user
+        return self.request.user
     
 
 
