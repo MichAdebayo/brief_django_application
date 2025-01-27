@@ -37,8 +37,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
-    'crispy_forms',
-    'crispy_bootstrap5',
     
     # Others Django Apps
     'tailwind',
