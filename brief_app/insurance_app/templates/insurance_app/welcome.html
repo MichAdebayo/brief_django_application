@@ -60,8 +60,8 @@
                 <ul class="flex space-x-8">
                     <!-- My profile-->
                     <li>
-                        <a href="{% url 'home' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'home' %}
+                        <a href="{% url 'profile' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'profile' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
                                 hover:bg-[#ed1c24] hover:text-white
@@ -82,8 +82,8 @@
                     </li>
                     <!-- Logout -->
                     <li>
-                        <a href="{% url 'join_us' %}" class="px-4 py-2 rounded-md transition 
-                            {% if request.resolver_match.url_name == 'join_us' %}
+                        <a href="{% url 'logout_user' %}" class="px-4 py-2 rounded-md transition 
+                            {% if request.resolver_match.url_name == 'logout_user' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
                                 hover:bg-[#ed1c24] hover:text-white
@@ -113,7 +113,7 @@
         <!-- Main Content Section -->
         <main class="flex-grow flex flex-col justify-center items-center text-center p-10">
             <h1 class="text-5xl md:text-6xl font-bold text-emerald-900">
-                Welcome Back, {{ user.username }}!
+                Welcome, {{ user.username }}!
             </h1>
             <h2 class="text-lg md:text-2xl m-5 italic text-black">
                 We’re glad to have you with us again. Let's take care of your health plan.
@@ -122,7 +122,7 @@
             <!-- Quick Access -->
             <div class="my-8">
                 <h3 class="text-2xl font-semibold text-emerald-900 py-4">Your charges</h3>
-                <a href="{% url 'about' %}" class="bg-[#009b9d] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#ed1c24]">
+                <a href="{% url 'predict' %}" class="bg-[#009b9d] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#ed1c24]">
                     Estimate my charges
                 </a>
             </div>
@@ -134,12 +134,12 @@
                     <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Track my appointments</a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
-                    <h4 class="text-xl font-bold text-emerald-900">Payments Due</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Make Payment</a>
+                    <h4 class="text-xl font-bold text-emerald-900">My estimations</h4>
+                    <a href="{% url 'prediction_history' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">View estimate history</a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
-                    <h4 class="text-xl font-bold text-emerald-900">My Password</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Change My Password</a>
+                    <h4 class="text-xl font-bold text-emerald-900">My password</h4>
+                    <a href="{% url 'changepassword' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Change my password</a>
                 </div>
             </div>
         </main>

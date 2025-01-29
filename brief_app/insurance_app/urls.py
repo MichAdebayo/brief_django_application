@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import (solve_message,predict_charges,CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, 
                     JoinUsView, ApplyView, TemplateView, apply,contact_view, 
                     HealthAdvicesView, CybersecurityAwarenessView,message_list_view, ChangePasswordView, 
-                    PredictChargesView, UserLogoutView)
+                    PredictChargesView, UserLogoutView, WelcomeView)
 
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('about/',AboutView.as_view(), name='about'),
     path('join-us/', JoinUsView.as_view(), name='join_us'),
+    path('welcome/', WelcomeView.as_view(), name='welcome'),
     path('apply/', apply, name='apply'),
     path('contact/', contact_view, name='contact'),
     path('apply/', ApplyView.as_view(), name='apply'),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('changepassword/', ChangePasswordView.as_view(), name='changepassword'),
     path('predict-charges/', PredictChargesView.as_view(), name='predict'),
     path('logout/', UserLogoutView.as_view(), name='logout_user'), 
+    path('prediction-history/', UserLogoutView.as_view(), name='prediction_history'),
 ]

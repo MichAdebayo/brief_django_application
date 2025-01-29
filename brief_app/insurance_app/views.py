@@ -251,12 +251,6 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         # Return the UserProfile object for the logged-in user
         return self.request.user
-    
-    # def form_valid(self, form):
-    #         # Save the form and display a success message
-    #         response = super().form_valid(form)
-    #         messages.success(self.request, 'Your charges has been updated!')
-    #         return response
 
     def form_valid(self, form):
         user_profile = self.get_object()
@@ -288,8 +282,6 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
         # Preprocess the data
         preprocessed_data = self.preprocess_data(personal_data)
 
-        print("Preprocessed Data:", preprocessed_data)  # Debugging
-
         # Load the model
         model = self.load_model()
         if model is None:
@@ -300,7 +292,6 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
 
         # Predict charges
         predicted_charges = model.predict(preprocessed_data)
-        print("Predicted Charges:", predicted_charges)  # Debugging
 
         return render(self.request, self.template_name, {
             "predicted_charges": round(predicted_charges[0], 2),
@@ -364,10 +355,6 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
         # Reorder columns to match the model's expectations
         df = df[expected_columns]
 
-        # Debugging: Print the final preprocessed DataFrame
-        print("Final Preprocessed DataFrame:")
-        print(df)
-
         return df
 
     def load_model(self):
@@ -383,55 +370,6 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
             print("Error: The file could not be unpickled. Ensure it is a valid pickle file.")
             return None
         
-    # def get_context_data(self, **kwargs):
-    #     # Add the predicted charges to the context (if available)
-    #     context = super().get_context_data(**kwargs)
-    #     if hasattr(self, 'predicted_charges'):
-    #         context['predicted_charges'] = self.predicted_charges
-    #     return context
-    
-    # def form_valid(self, form):
-    #     # Fetch the user's profile data
-    #     user_profile = self.get_object()
-
-    #     # Prepare input data for the model
-    #     age = form.cleaned_data['age']
-    #     bmi = form.cleaned_data['weight'] / ((form.cleaned_data['height'] / 100) ** 2)  # Calculate BMI
-    #     children = form.cleaned_data['num_children']
-    #     smoker = form.cleaned_data['smoker']
-
-    #     personal_data = {"age": age, "bmi": bmi, "smoker": smoker, "children": children}
-
-    #     # Preprocess the data
-    #     preprocessed_data = self.preprocess_data(personal_data)
-
-    #     # Debugging: Print the preprocessed data
-    #     print("Preprocessed Data:")
-    #     print(preprocessed_data)
-
-    #     # Load the model
-    #     model = self.load_model()
-    #     if model is None:
-    #         return render(self.request, self.template_name, {"error": "Failed to load the model.", "form": form})
-
-    #     # Predict charges
-    #     predicted_charges = model.predict(preprocessed_data)
-
-    #     # Debugging: Print the predicted charges
-    #     print("Predicted Charges:")
-    #     print(predicted_charges)
-
-    #     # Store the predicted charges in the instance for use in the template
-    #     self.predicted_charges = round(predicted_charges[0], 2)
-
-    #     # Render the template with the predicted charges and updated form
-    #     return self.render_to_response(self.get_context_data(form=form))
-
-
-
-
-
-
 
 #################################################################################
 

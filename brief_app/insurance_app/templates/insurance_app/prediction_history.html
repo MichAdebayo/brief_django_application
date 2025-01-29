@@ -1,0 +1,77 @@
+{% extends "insurance_app/base_user.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Current Profile Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Current Profile</h2>
+            <dl class="grid grid-cols-2 gap-4">
+                <div class="col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Age</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ user.age }}</dd>
+                </div>
+                <div class="col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">BMI</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ user.bmi|floatformat:1 }}</dd>
+                </div>
+                <div class="col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Children</dt>
+                    <dd class="mt-1 text-lg text-gray-900">{{ user.num_children }}</dd>
+                </div>
+                <div class="col-span-1">
+                    <dt class="text-sm font-medium text-gray-500">Smoker</dt>
+                    <dd class="mt-1 text-lg text-gray-900">
+                        {% if user.smoker %}Yes{% else %}No{% endif %}
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Prediction History Section -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Prediction History</h2>
+            
+            <div class="flow-root">
+                <ul class="-my-4 divide-y divide-gray-200">
+                    {% for prediction in prediction_history %}
+                    <li class="py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">
+                                    {{ prediction.timestamp|date:"F j, Y H:i" }}
+                                </p>
+                                <div class="mt-1 grid grid-cols-3 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Age</p>
+                                        <p class="text-gray-900">{{ prediction.age }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">BMI</p>
+                                        <p class="text-gray-900">{{ prediction.bmi|floatformat:1 }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Children</p>
+                                        <p class="text-gray-900">{{ prediction.num_children }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                                <span class="text-xl font-bold text-green-600">
+                                    ${{ prediction.predicted_charges|floatformat:2 }}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="py-4 text-center text-gray-500">
+                        No predictions made yet
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

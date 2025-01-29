@@ -21,30 +21,29 @@
                 <ul class="flex space-x-8">
                     <!-- Home -->
                     <li>
-                        <form action="{% url 'home' %}" method="POST" class="inline">
+                        <form action="{% url 'welcome' %}" method="GET" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="px-4 py-2 rounded transition 
-                                {% if request.resolver_match.url_name == 'home' %}
+                                {% if request.resolver_match.url_name == 'welcome' %}
                                     bg-[#026f4e] text-white shadow-lg
                                 {% else %}
                                     hover:bg-[#ed1c24] hover:text-white
                                 {% endif %}">
-                                Home
+                                My Assur'Aimant
                             </button>
-                        </form>
+                        </form> 
                     </li>
 
                     <!-- Edit Profile -->
                     <li>
-                        {% comment %} <a href="{% url 'profile' %}" class=px-4 py-2 rounded transition > Edit Profile</a> {% endcomment %}
-                         <form action="{% url 'profile' %}" method="GET" class="inline">
+                        <form action="{% url 'profile' %}" method="GET" class="inline">
                             <button type="submit" class="px-4 py-2 rounded transition 
                                 {% if request.resolver_match.url_name == 'profile' %}
                                     bg-[#006f4e]!important text-white shadow-lg
                                 {% else %}
                                     hover:bg-[#ed1c24] hover:text-white 
                                 {% endif %}">
-                                Edit profile
+                                Edit Profile
                             </button>
                         </form> 
                     </li>
@@ -58,7 +57,7 @@
                                 {% else %}
                                     hover:bg-[#ed1c24] hover:text-white
                                 {% endif %}">
-                                Estimate charges
+                                Estimate Charges
                             </button>
                         </form>
                     </li>
