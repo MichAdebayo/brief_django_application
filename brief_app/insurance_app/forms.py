@@ -18,20 +18,6 @@ class UserProfileForm(forms.ModelForm):
                   'age', 'weight', 'height']
 
 
-
-##############################################
-
-# class UserSignupForm(forms.ModelForm):
-#     class Meta:
-#         model = UserProfile
-#         fields = ['username', 'email', 'password']
-
-
-# class UserLoginForm(forms.ModelForm):
-#     class Meta:
-#         model = UserProfile
-#         fields = ['username', 'password']
-
 class UserSignupForm(forms.ModelForm):                                          # Form based on the UserProfile model
     password = forms.CharField(widget=forms.PasswordInput, label="Password")    # Password field with hidden input
 
@@ -45,12 +31,12 @@ class UserSignupForm(forms.ModelForm):                                          
         if commit:
             user.save()                                                         # Save the user to the database
         return user
+    
+
 class UserLoginForm(forms.Form):                                                # Simple form, not based on a model
     username = forms.CharField(max_length=150, label="Username")                # Field for the username
     password = forms.CharField(widget=forms.PasswordInput, label="Password")    # Password field with hidden input
 
-
-##############################################
 
 class ApplicationForm(forms.ModelForm):
     class Meta:
