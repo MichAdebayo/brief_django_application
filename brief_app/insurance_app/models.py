@@ -16,16 +16,18 @@ class UserProfile(AbstractUser):
         MALE = 'Male', 'Male'
         FEMALE = 'Female', 'Female'
 
-    age = models.IntegerField(default=False)
-    weight = models.IntegerField(default=False)
-    height = models.IntegerField(default=False) 
-    num_children = models.IntegerField(default=False) 
+    
+    age = models.IntegerField(default=0)
+    weight = models.IntegerField(default=0)
+    height = models.IntegerField(default=0) 
+    num_children = models.IntegerField(default=0) 
     smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
     region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
     sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)
 
     def __str__(self):
         return self.username
+
 
 #For the join us job application area
  
@@ -62,3 +64,5 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
+    
+    

@@ -5,11 +5,11 @@ from .models import UserProfile, Job, ContactMessage
 admin.site.register(UserProfile)
 
 
-
 #Job listing
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
     list_display = ('title', 'location', 'experience')
+
 
 #Contact messages
 @admin.register(ContactMessage)

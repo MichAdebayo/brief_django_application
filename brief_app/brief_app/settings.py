@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key') # Default value if no
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True' # Convert the string to boolean
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'brief_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE':  'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -150,7 +150,6 @@ AUTH_USER_MODEL = 'insurance_app.UserProfile'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""Dorothee"""
 
 # Redirect to this URL after successful login
 LOGIN_REDIRECT_URL = '/profile/'
@@ -161,10 +160,8 @@ LOGOUT_REDIRECT_URL = '/login/'
 # Optional: URL for the login page (used by @login_required decorator)
 LOGIN_URL = '/login/'
 
-
 # Tailwind Theme
 TAILWIND_APP_NAME = 'theme'
-
 
 INTERNAL_IPS = [
     "127.0.0.1",
