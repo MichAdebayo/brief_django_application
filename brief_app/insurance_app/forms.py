@@ -30,3 +30,13 @@ class ApplicationForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     resume = forms.FileField(required=False)
     cover_letter = forms.CharField(widget=forms.Textarea, required=True)
+
+class InsuranceForm(forms.Form):
+    age = forms.IntegerField(label="Age")
+    weight = forms.FloatField(label="Weight (in kg)")  # Client's weight
+    height = forms.FloatField(label="Height (in meters)")  # Client's height
+    children = forms.IntegerField(label="Number of children")
+    smoker = forms.ChoiceField(choices=[('yes', 'Yes'), ('no', 'No')], label="Smoker")
+    sex = forms.ChoiceField(choices=[('male', 'Male'), ('female', 'Female')], label="Sex")
+    region = forms.ChoiceField(choices=[('northeast', 'Northeast'), ('northwest', 'Northwest'), 
+                                       ('southeast', 'Southeast'), ('southwest', 'Southwest')], label="Region")

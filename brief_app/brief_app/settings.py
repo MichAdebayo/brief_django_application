@@ -143,7 +143,6 @@ AUTH_USER_MODEL = 'insurance_app.UserProfile'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""Dorothee"""
 
 # Redirect to this URL after successful login
 LOGIN_REDIRECT_URL = '/user_profile/'

@@ -51,8 +51,8 @@
                     </li>
                     <!-- Get a Quote -->
                     <li>
-                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == '#' %}
+                        <a href="{% url 'predict_charges' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'predict_charges' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
                                 hover:bg-[#ed1c24] hover:text-white
