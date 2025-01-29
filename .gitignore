@@ -97,6 +97,8 @@ node_modules
 
 # Database
 db.sqlite3
+brief_app/db.sqlite3
 
 # Data
 .env
+
