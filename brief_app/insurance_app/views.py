@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic.edit import CreateView, UpdateView, FormView
@@ -11,9 +11,7 @@ from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
 import json
-import numpy as np
 from django.views.decorators.csrf import csrf_exempt
-import os
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.conf import settings
 from django.views import View 
