@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.views.generic.edit import CreateView, UpdateView, FormView
@@ -13,7 +13,7 @@ from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 import os
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.conf import settings
 from django.views import View 
 import pandas as pd
@@ -95,37 +95,59 @@ def contact_view(request):
 #################################################################################
 # REPLACE WITH DOROTHEE'S CODE
 
-class SignupView(CreateView):
-    model = UserProfile
-    form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-    template_name = 'insurance_app/signup.html'
-    success_url = reverse_lazy('login')
-    # redirect_authenticated_user = True  # Redirect already logged-in users
 
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
-        user.save()
-        return super().form_valid(form)
 
+class SignupView(CreateView):                           # Generic view for creating an object
+    model = UserProfile                                 # Model used
+    form_class = UserSignupForm                         # Form used
+    template_name = 'insurance_app/signup.html'         # HTML template for displaying the form
+    success_url = reverse_lazy('login')  
 
 class CustomLoginView(LoginView):
-    template_name = 'insurance_app/login.html' 
-    success_url = reverse_lazy('profile')
-    def form_valid(self, form):
-        # Authenticate the user
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(self.request, username=username, password=password)
+    template_name = 'insurance_app/login.html'
+    redirect_authenticated_user = False
 
-        if user is not None:
-            # Log in the user and redirect
-            login(self.request, user)
-            return super().form_valid(form)
-        else:
-            # Invalid credentials, show error message
-            form.add_error(None, 'Invalid username or password.') # Add a general error message
-            return self.form_invalid(form)
+    def get_success_url(self):
+        # Redirect to the profile page after successful login
+        return reverse_lazy('login')
+
+    def dispatch(self, request, *args, **kwargs):
+        # Redirect authenticated users to the profile page
+        if self.request.user.is_authenticated:
+            return redirect('profile')
+        return super().dispatch(request, *args, **kwargs)
+
+
+# class SignupView(CreateView):
+#     model = UserProfile
+#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
+#     template_name = 'insurance_app/signup.html'
+#     success_url = reverse_lazy('login')
+#     # redirect_authenticated_user = True  # Redirect already logged-in users
+
+#     def form_valid(self, form):
+#         user = form.save(commit=False)
+#         user.set_password(form.cleaned_data['password'])
+#         user.save()
+#         return super().form_valid(form)
+
+# class CustomLoginView(LoginView):
+#     template_name = 'insurance_app/login.html' 
+#     success_url = reverse_lazy('profile')
+#     def form_valid(self, form):
+#         # Authenticate the user
+#         username = form.cleaned_data.get('username')
+#         password = form.cleaned_data.get('password')
+#         user = authenticate(self.request, username=username, password=password)
+
+#         if user is not None:
+#             # Log in the user and redirect
+#             login(self.request, user)
+#             return super().form_valid(form)
+#         else:
+#             # Invalid credentials, show error message
+#             form.add_error(None, 'Invalid username or password.') # Add a general error message
+#             return self.form_invalid(form)
 
 #################################################################################
 
@@ -144,13 +166,14 @@ class ChangePasswordView(PasswordChangeView):
 
 # Template for user profile view
 class UserProfileView(LoginRequiredMixin, UpdateView): 
-    model = UserProfile
+    model = get_user_model()
     form_class = UserProfileForm
     template_name = 'insurance_app/profile.html'
     success_url = reverse_lazy('profile')
 
     def get_object(self, queryset=None):
         # Return the UserProfile object for the logged-in user
+        print(self.request.user)
         return self.request.user
     
     def form_valid(self, form):
@@ -158,6 +181,7 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
             response = super().form_valid(form)
             messages.success(self.request, 'Your profile has been updated!')
             return response
+
 
 
 class PredictChargesView(LoginRequiredMixin, UpdateView): 

@@ -3,6 +3,7 @@ from .models import UserProfile
 from .models import JobApplication  # Assuming you have a JobApplication model to store applications
 from django.utils.html import format_html
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.hashers import make_password
 
 class PredictChargesForm(forms.ModelForm):
     class Meta:
@@ -16,16 +17,40 @@ class UserProfileForm(forms.ModelForm):
                   'email', 'smoker', 'region', 'sex', 'num_children',
                   'age', 'weight', 'height']
 
-class UserSignupForm(forms.ModelForm):
+
+
+##############################################
+
+# class UserSignupForm(forms.ModelForm):
+#     class Meta:
+#         model = UserProfile
+#         fields = ['username', 'email', 'password']
+
+
+# class UserLoginForm(forms.ModelForm):
+#     class Meta:
+#         model = UserProfile
+#         fields = ['username', 'password']
+
+class UserSignupForm(forms.ModelForm):                                          # Form based on the UserProfile model
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")    # Password field with hidden input
+
     class Meta:
         model = UserProfile
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password']                              # Fields displayed in the form
 
-class UserLoginForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ['username', 'password']
+    def save(self, commit=True):
+        user = super().save(commit=False)                                       # Create a user object without saving it to the database yet
+        user.password = make_password(self.cleaned_data['password'])            # Hash the password before saving
+        if commit:
+            user.save()                                                         # Save the user to the database
+        return user
+class UserLoginForm(forms.Form):                                                # Simple form, not based on a model
+    username = forms.CharField(max_length=150, label="Username")                # Field for the username
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")    # Password field with hidden input
 
+
+##############################################
 
 class ApplicationForm(forms.ModelForm):
     class Meta:

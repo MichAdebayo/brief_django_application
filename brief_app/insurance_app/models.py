@@ -16,10 +16,11 @@ class UserProfile(AbstractUser):
         MALE = 'Male', 'Male'
         FEMALE = 'Female', 'Female'
 
-    age = models.IntegerField(blank=False)
-    weight = models.IntegerField(blank=False)
-    height = models.IntegerField(blank=False) 
-    num_children = models.IntegerField(blank=False) 
+    
+    age = models.IntegerField(default=0)
+    weight = models.IntegerField(default=0)
+    height = models.IntegerField(default=0) 
+    num_children = models.IntegerField(default=0) 
     smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
     region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
     sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)

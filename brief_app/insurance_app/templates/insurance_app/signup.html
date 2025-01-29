@@ -1,4 +1,61 @@
-<!DOCTYPE html>
+{% load static %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Couleurs personnalisées */
+        .bg-primary {
+            background-color: #1d1b1e; /* Fond principal */
+        }
+        .bg-secondary {
+            background-color: #221e1e; /* Fond du formulaire */
+        }
+        .bg-custom {
+            background-color: #a37a41; /* Couleur personnalisée */
+        }
+        .hover-bg-custom:hover {
+            background-color: #8c6936; /* Couleur légèrement plus foncée pour le hover */
+        }
+    </style>
+</head>
+<body class="bg-primary flex items-center justify-center min-h-screen">
+    <div class="bg-secondary text-white rounded-lg shadow-lg p-8 w-full max-w-sm">
+        <div class="text-center mb-6">
+            <div class="flex items-center justify-center w-36 h-36 mx-auto">
+                <img src="{% static 'images/logo_assuraimant_sfcb.svg' %}" alt="Logo AssurAimant" class="w-full h-full object-contain">
+            </div>
+            <h2 class="text-2xl font-bold">Create an account</h2>
+        </div>
+        <form method="post" action="{% url 'signup' %}" class="space-y-4">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div>
+                {{ form.username.errors }}
+                <input type="text" name="username" placeholder="Enter your username" 
+                        class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-amber-600" required>
+            </div>
+            <div>
+                {{ form.password.errors }}
+                <input type="password" name="password" placeholder="Enter your password" 
+                        class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-marron-500" required>
+            </div>
+            <button type="submit" class="w-full py-3 bg-custom hover-bg-custom rounded text-sm font-bold transition duration-200">
+                Sign Up
+            </button>
+        </form>
+        <p class="text-center text-gray-400 text-sm mt-4">
+            Already have an account? <a href="{% url 'login' %}" class="text-custom hover:underline">Log In</a>
+        </p>
+    </div>
+</body>
+</html>
+
+{% comment %} <!DOCTYPE html>
 <html>
 <head>
     <title>Signup</title>
@@ -11,4 +68,4 @@
         <button type="submit">Sign Up</button>
     </form>
 </body>
-</html>
+</html> {% endcomment %}
