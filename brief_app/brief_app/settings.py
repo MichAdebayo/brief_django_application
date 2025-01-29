@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'brief_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE':  'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -152,15 +152,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/profile/'
 
 # Redirect to this URL after logout
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/logout_user/'
 
 # Optional: URL for the login page (used by @login_required decorator)
 LOGIN_URL = '/login/'
 
-
 # Tailwind Theme
 TAILWIND_APP_NAME = 'theme'
-
 
 INTERNAL_IPS = [
     "127.0.0.1",

@@ -4,7 +4,10 @@ from .models import JobApplication  # Assuming you have a JobApplication model t
 from django.utils.html import format_html
 from django.contrib.auth.forms import PasswordChangeForm
 
-# import pickle
+class PredictChargesForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['smoker', 'age', 'weight', 'height', 'num_children']
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

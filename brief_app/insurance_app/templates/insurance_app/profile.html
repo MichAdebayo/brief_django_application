@@ -1,4 +1,4 @@
-{% extends "insurance_app/base.html" %} 
+{% extends "insurance_app/base_user.html" %} 
 {% load static %} 
 
 {% block content %}
@@ -29,10 +29,10 @@
     {% endif %}
 
     <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-bold mt-0">Edit Information</h1>
+        <h1 class="text-2xl font-bold mt-0">Edit Profile</h1>
 
         <div class="flex justify-center mt-3">
-            <form method="post" action="" class="p-4 border rounded-lg shadow-md w-full max-w-2xl" novalidate>
+            <form method="post" action="{% url 'profile' %}" class="p-4 border rounded-lg shadow-md w-full max-w-2xl" novalidate>
                 {% csrf_token %}
                 
                 <!-- Grid for form fields -->
@@ -44,7 +44,7 @@
                             type="text"
                             id="id_first_name"
                             name="first_name"
-                            value="{{ form.first_name.value|default_if_none:'' }}"
+                            value="{{ form.first_name.value |default_if_none:'' }}"
                             class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
                             placeholder="John"
                         />
@@ -206,7 +206,7 @@
                 </div> <!-- Close the grid -->
 
                 <!-- Buttons -->
-                <div class="mt-4 flex justify-center items-center gap-x-2">
+                <div class="mt-4 flex justify-center items-center gap-x-10">
                     <!-- Update Profile Button -->
                     <button type="submit" class="bg-[#026f4e] text-[#FBFCFA] px-4 py-2 rounded hover:text-[#FBFCFA] hover:bg-[#ed1c24] whitespace-nowrap">
                         Update profile
@@ -215,11 +215,6 @@
                     <!-- Change Password Link -->
                     <a href="{% url 'changepassword' %}" class="bg-[#026f4e] text-[#FBFCFA] px-4 py-2 rounded hover:text-[#FBFCFA] hover:bg-[#ed1c24] whitespace-nowrap">
                         Change password
-                    </a>
-                
-                    <!-- Predict Charges Button -->
-                    <a href="{% url 'predict' %}" class="bg-[#026f4e] text-[#FBFCFA] px-4 py-2 rounded hover:text-[#FBFCFA] hover:bg-[#ed1c24] whitespace-nowrap">
-                        Predict charges
                     </a>
                 </div>
             </form> <!-- Close the form -->
