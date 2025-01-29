@@ -37,13 +37,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Team App
     'insurance_app',
-    'crispy_forms',
-    'crispy_bootstrap5',
+    # 'crispy_forms',
+    # 'crispy_bootstrap5',
     
     # Others Django Apps
     'tailwind',
-    'theme',
-    'django_browser_reload',
+    #'theme',
+    # 'django_browser_reload',
 
     # Django
     'django.contrib.admin',
@@ -52,14 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Team App
-    'insurance_app',
-
-    # Others Django Apps
-    'theme',
-    'tailwind',
-    # 'django_browser_reload',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -73,7 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
+    #'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'brief_app.urls'
@@ -146,7 +138,7 @@ STATIC_URL = '/static/'
 
 # Ensure this points to your app's static folder:
 STATICFILES_DIRS = [
-    BASE_DIR / "theme" / "static",
+    BASE_DIR / "static",
 ]
 
 AUTH_USER_MODEL = 'insurance_app.UserProfile'
@@ -175,3 +167,15 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# Reset Password - Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+# Sessions expire when the browser is closed unless "Remember Me" is checked
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 1209600  # 2 semaines (if Remember Me is active)

@@ -1,263 +1,38 @@
-{% extends 'base.html' %} {# Ensure you have a base.html #}
+{% extends 'insurance_app/base.html' %}
 
-**profile.html** 
+{% block title %}Profile{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-bold mt-4">Edit Information</h1>
+<div id ="user-profile" class="form-container">
+    <h2 id="user-profile" class="account_settings">
+        Edit Your Personal Information
+    </h2>
 
-        <div class="flex justify-center mt-3">
-            <form method="post" action="" class="p-8 border rounded-lg shadow-md w-full max-w-2xl" novalidate>
-                {% csrf_token %}
-                
-                <!-- Grid for form fields -->
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- First Name -->
-                    <div class="col-span-1">
-                        <label for="id_first_name" class="block text-sm font-medium text-slate-900 mb-2">First Name</label>
-                        <input
-                            type="text"
-                            id="id_first_name"
-                            name="first_name"
-                            value="{{ form.first_name.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="John"
-                        />
-                    </div>
-
-                    <!-- Last Name -->
-                    <div class="col-span-1">
-                        <label for="id_last_name" class="block text-sm font-medium text-slate-900 mb-2">Last Name</label>
-                        <input
-                            type="text"
-                            id="id_last_name"
-                            name="last_name"
-                            value="{{ form.last_name.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="Doe"
-                        />
-                    </div>
-
-                    <!-- Username -->
-                    <div class="col-span-1">
-                        <label for="id_username" class="block text-sm font-medium text-slate-900 mb-2">Username</label>
-                        <input
-                            type="text"
-                            id="id_username"
-                            name="username"
-                            value="{{ form.username.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="johndoe"
-                        />
-                    </div>
-
-                    <!-- Email -->
-                    <div class="col-span-1">
-                        <label for="id_email" class="block text-sm font-medium text-slate-900 mb-2">Email Address</label>
-                        <input
-                            type="email"
-                            id="id_email"
-                            name="email"
-                            value="{{ form.email.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="john.doe@example.com"
-                        />
-                    </div>
-
-                    <!-- Age -->
-                    <div class="col-span-1">
-                        <label for="id_age" class="block text-sm font-medium text-slate-900 mb-2">Age</label>
-                        <input
-                            type="number"
-                            id="id_age"
-                            name="age"
-                            value="{{ form.age.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="30"
-                            min="0"  
-                            max="120" 
-                        />
-                    </div>
-
-                    <!-- Number of Children -->
-                    <div class="col-span-1">
-                        <label for="id_num_children" class="block text-sm font-medium text-slate-900 mb-2">Number of Children</label>
-                        <input
-                            type="number"
-                            id="id_num_children"
-                            name="num_children"
-                            value="{{ form.num_children.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="0"
-                            min="0"  
-                        />
-                    </div>
-
-                    <!-- Height -->
-                    <div class="col-span-1">
-                        <label for="id_height" class="block text-sm font-medium text-slate-900 mb-2">Height (cm)</label>
-                        <input
-                            type="number"
-                            id="id_height"
-                            name="height"
-                            value="{{ form.height.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="175"
-                            min="0"  
-                            max="300"
-                        />
-                    </div>
-
-                    <!-- Weight -->
-                    <div class="col-span-1">
-                        <label for="id_weight" class="block text-sm font-medium text-slate-900 mb-2">Weight (kg)</label>
-                        <input
-                            type="number"
-                            id="id_weight"
-                            name="weight"
-                            value="{{ form.weight.value|default_if_none:'' }}"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            placeholder="70"
-                            min="0"  
-                            max="500"
-                        />
-                    </div>
-
-                    <!-- Sex -->
-                    <div class="col-span-2">
-                        <label for="id_sex" class="block text-sm font-medium text-slate-900 mb-2">Sex</label>
-                        <select
-                            id="id_sex"
-                            name="sex"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            required
-                        >
-                            <!-- Placeholder Option -->
-                            <option value="" disabled {% if not form.sex.value %}selected{% endif %}>-----</option>
-                            
-                            <!-- Valid Options -->
-                            <option value="Male" {% if form.sex.value == 'Male' %}selected{% endif %}>Male</option>
-                            <option value="Female" {% if form.sex.value == 'Female' %}selected{% endif %}>Female</option>
-                        </select>
-                    </div>
-
-                    <!-- Region -->
-                    <div class="col-span-2">
-                        <label for="id_region" class="block text-sm font-medium text-slate-900 mb-2">Region</label>
-                        <select
-                            id="id_region"
-                            name="region"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            required
-                        >
-                            <!-- Placeholder Option -->
-                            <option value="" disabled {% if not form.region.value %}selected{% endif %}>-----</option>
-                            
-                            <!-- Valid Options -->
-                            <option value="Northeast" {% if form.region.value == 'Northeast' %}selected{% endif %}>Northeast</option>
-                            <option value="Northwest" {% if form.region.value == 'Northwest' %}selected{% endif %}>Northwest</option>
-                            <option value="Southeast" {% if form.region.value == 'Southeast' %}selected{% endif %}>Southeast</option>
-                            <option value="Southwest" {% if form.region.value == 'Southwest' %}selected{% endif %}>Southwest</option>
-                        </select>
-                    </div>
-
-                    <!-- Smoker -->
-                    <div class="col-span-2">
-                        <label for="id_smoker" class="block text-sm font-medium text-slate-900 mb-2">Smoker</label>
-                        <select
-                            id="id_smoker"
-                            name="smoker"
-                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            required
-                        >
-                            <!-- Placeholder Option -->
-                            <option value="" disabled {% if not form.smoker.value %}selected{% endif %}>-----</option>
-                            
-                            <!-- Valid Options -->
-                            <option value="Yes" {% if form.smoker.value %}selected{% endif %}>Yes</option>
-                            <option value="No" {% if not form.smoker.value %}selected{% endif %}>No</option>
-                        </select>
-                    </div>
-
-                <!-- Buttons -->
-                <div class="mt-4 flex justify-end">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Update profile</button>
-                    <a href="{% url 'changepassword' %}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2 inline-block text-center no-underline">
-                        Change password
-                    </a>
-                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">Predict charges</button>
-                </div>
-            </form>
-        </div>
-    </div>
-{% endblock %}
-
-
-{% comment %} {% block content %}
-    <div class="container">
-        <h1 class="mt-4">Edit Information</h1> 
-
-        <div class="d-flex justify-content-center mt-3">
-            <form method="post" action="" class="p-5 border rounded shadow" novalidate>
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-6">
-                    {{ form.first_name|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                    {{ form.last_name|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.username|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.email|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.age|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.num_children|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.height|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                        {{ form.weight|as_crispy_field }}
-                    </div>
-                    {{ form.sex|as_crispy_field }}
-                    {{ form.region|as_crispy_field }}
-                    {{ form.smoker|as_crispy_field }}
-                </div>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
-                <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
-                <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
-            </form>
-        </div>
-    {% endblock %} {% endcomment %}
-
-
-{% comment %}  {% endcomment %} {% comment %}{% endcomment %}
-{% comment %}  {% endcomment %}
-{% comment %}  {% endcomment %}
-
-
-
-{% comment %} {% block content %}
-    <div class="container">
-        <h1 class="mt-4">Edit Information</h1> 
-        <form method="post" novalidate>
+    <div class="d-flex justify-content-center mt-3">
+        <form method="post" action="" class="p-5 border rounded shadow">
             {% csrf_token %}
-            <div class="crispy-form"> 
-                {{ form|crispy }}
+            
+            <div class="mb-5">
+                {{ form.as_p }}
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Update profile</button> 
-            <button type="submit" class="btn btn-secondary mt-3">Change password</button> 
-            <button type="submit" class="btn btn-secondary mt-3">Predict charges</button> 
+            
+            <div class="row text-center mt-3">
+                <div class="col-md-6">
+                    <button id="user-profile-save" type="submit" class="btn btn-primary">Save</button>
+                </div>
+                <div class="col-md-6">
+                    <button id="user-profile-predict" type="submit" class="btn btn-secondary">Predict charges</button>
+                </div>
+            </div>
         </form>
     </div>
-{% endblock %} {% endcomment %}
+    
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %} 
+{% endblock %} 
 
-
-npx tailwindcss -i ./brief_app/theme/static_src/src/input.css -o ./brief_app/theme/static_src/src/styles.css

@@ -1,39 +1,116 @@
-from django.shortcuts import render, redirect # type: ignore
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView, PasswordChangeView #, LogoutView
+from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView
 from .models import UserProfile, Job, ContactMessage
-from .forms import UserProfileForm, UserSignupForm, UserLoginForm, ApplicationForm
+from .forms import UserProfileForm, UserSignupForm, ApplicationForm
 from django.http import HttpResponse
-import pickle
-from django.http import JsonResponse
-import json
-import numpy as np
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import os
+
 
 # Create your views here.
 class HomeView(TemplateView):
-    template_name = 'insurance_app/home.html'   
-          # Template for the home page
-
-#template for about us 
-class AboutView(TemplateView):
-    template_name= 'insurance_app/about.html'
-#Template for join us view 
-class JoinUsView(TemplateView):
-    template_name = 'insurance_app/join_us.html'
+    template_name = 'insurance_app/home.html'           # Template for the home page
 
     def get_context_data(self, **kwargs):
+        # Récupérer le contexte du template
+        context = super().get_context_data(**kwargs)
+
+        # Sections de l'Info Bar
+        context['info_bar_sections'] = [
+            {
+                'title': 'Assur\'Aimant',
+                'links': [
+                    {'name': 'About Us', 'url': reverse('about')},
+                    {'name': 'Join Us', 'url': reverse('join_us')},
+                ]
+            },
+            {
+                'title': 'Assur\'Cares',
+                'links': [
+                    {'name': 'Need a Quote', 'url': reverse('join_us')},
+                    {'name': 'Need Help', 'url': reverse('contact')},
+                ]
+            },
+            {
+                'title': 'Assur\'Awareness',
+                'links': [
+                    {'name': 'Health Advice', 'url': reverse('health_advices')},
+                    {'name': 'Cybersecurity Awareness', 'url': reverse('cybersecurity_awareness')},
+                ]
+            }
+        ]
+
+        return context
+
+class SignupView(CreateView):                           # Generic view for creating an object
+    model = UserProfile                                 # Model used
+    form_class = UserSignupForm                         # Form used
+    template_name = 'insurance_app/signup.html'         # HTML template for displaying the form
+    success_url = reverse_lazy('login')                 # Redirect after successful signup
+
+    
+class CustomLoginView(LoginView):
+    template_name = 'insurance_app/login.html'
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        # Redirect to the profile page after successful login
+        return reverse_lazy('profile')
+
+    def dispatch(self, request, *args, **kwargs):
+        # Redirect authenticated users to the profile page
+        if self.request.user.is_authenticated:
+            return redirect('profile')
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        # Check if 'remember me' is checked
+        remember_me = self.request.POST.get('remember_me', None) is not None
+
+        # Set session expiry accordingly
+        if not remember_me:
+            self.request.session.set_expiry(0)  # Expire session on browser close
+        else:
+            self.request.session.set_expiry(1209600)  # Session lasts 2 weeks
+
+        return super().form_valid(form)
+    
+    
+# Create your views here.
+class UserProfileView(LoginRequiredMixin, UpdateView):
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = 'insurance_app/profile.html'
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your profile has been updated!')
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+# Template Eliandy
+## Template for about us 
+class AboutView(TemplateView):
+    template_name= 'insurance_app/about.html'
+    
+## Template for join us view 
+class JoinUsView(TemplateView):
+    template_name = 'insurance_app/join_us.html'
+    # apply view for the join us view
+    def get_context_data(self, **kwargs):                       
         context = super().get_context_data(**kwargs)
         context['jobs'] = Job.objects.all()
         return context
-#### apply view for the join us view
-
+    
+## Template for join us view 
 class ApplyView(TemplateView):
     template_name = 'apply_thank_you.html'
 
@@ -51,7 +128,6 @@ class ApplyView(TemplateView):
         return render(request, self.template_name, {'form': form})
 
 # Logic to save the application data (e.g., store it in the database or email it)
-
 def apply(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -59,93 +135,20 @@ def apply(request):
         job_id = request.POST.get('job_id')
         resume = request.FILES.get('resume')
 
-        
-
         return HttpResponse("Application submitted successfully!")
     return redirect('join_us')
 
-#class WelcomeView(TemplateView):
-    #template_name = 'insurance_app/welcome.html'  
-#templates  for Assur'Cares Section
 class HealthAdvicesView(TemplateView):
     template_name = 'insurance_app/health_advices.html'
 
 class CybersecurityAwarenessView(TemplateView):
     template_name = 'insurance_app/cybersecurity_awareness.html'
 
-# class SignupView(CreateView):
-#     model = UserProfile
-#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-#     template_name = 'insurance_app/signup.html'
-#     success_url = reverse_lazy('test_login')
-#     print("###########Signup success###########")
-#     # redirect_authenticated_user = True  # Redirect already logged-in users
-
     def form_valid(self, form):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data['password'])
         user.save()
         return super().form_valid(form)
-
-
-class CustomLoginView(LoginView):
-    template_name = 'insurance_app/login.html' 
-    success_url = reverse_lazy('profile')
-    def form_valid(self, form):
-        # Authenticate the user
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(self.request, username=username, password=password)
-
-        if user is not None:
-            # Log in the user and redirect
-            login(self.request, user)
-            return super().form_valid(form)
-        else:
-            # Invalid credentials, show error message
-            form.add_error(None, 'Invalid username or password.') # Add a general error message
-            return self.form_invalid(form)
-
-#     def get_success_url(self):
-#         print("#########Get success URL called########")
-#         success_url =  reverse_lazy('home')
-#         return reverse_lazy('home')  # Redirect to a simple page
-    
-class CustomLoginView(LoginView):
-    #form_class = UserLoginForm
-    template_name = 'insurance_app/login.html'  # Template for the login page
-    success_url = reverse_lazy('home')     # Replace 'home' with the name of your desired URL
-    redirect_authenticated_user = True  # Redirect already logged-in users
-
-# Create your views here.
-class UserProfileView(UpdateView): # LoginRequiredMixin, 
-    model = UserProfile # Specify the model to use
-    form_class = UserProfileForm
-    template_name = 'insurance_app/profile.html'
-    success_url = reverse_lazy('profile')
-
-    def get_object(self, queryset=None):
-        # Return the UserProfile object for the logged-in user
-        return self.request.user
-    
-
-
-    # def get_initial(self):
-    #     initial = super().get_initial()
-    #     if 'initial_user_profile' in self.request.session:
-    #         initial.update(self.request.session.pop('initial_user_profile'))
-    #         self.request.session.modified = True
-    #     return initial
-    
-    # def form_valid(self, form):
-    #     response = super().form_valid(form)
-    #     messages.success(self.request, 'Your profile has been updated!')
-    #     return response
-  
-    def get_object(self, queryset=None):
-        return self.request.user.userprofile
-
-
 
 
 #To handle the messages submission
@@ -163,6 +166,3 @@ def contact_view(request):
         return redirect('contact')  # Replace 'contact' with the name of your URL pattern
     
     return render(request, "insurance_app/contact_form.html")
-
-
-

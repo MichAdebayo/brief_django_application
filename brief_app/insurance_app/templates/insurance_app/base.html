@@ -4,90 +4,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assur'Aimant</title>
+    <title>{% block title %}Assur'Aimant{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen flex flex-col text-whitesmoke font-sans bg-[#FBFCFA] scroll-smooth">
+<body class="min-h-screen flex flex-col bg-[#FBFCFA] font-sans scroll-smooth text-gray-800">
 
-    <!-- Header -->
-    <header class="bg-[#006f4e] text-white py-4">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <h1 class="text-2xl font-bold">Assur'Aimant</h1>
-            <nav>
-                <ul class="flex space-x-8">
-                    <!-- Home -->
-                    <li>
-                        <a href="{% url 'home' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'home' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Home
-                        </a>
+<!-- Header -->
+<header class="bg-[#006f4e] text-white py-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center px-4">
+        <!-- Logo -->
+        <h1 class="text-2xl font-bold">
+            <a href="{% url 'home' %}" class="hover:text-[#ed1c24] transition duration-300">Assur'Aimant</a>
+        </h1>
+
+        <!-- Navigation -->
+        <nav>
+            <ul class="flex space-x-6 text-base items-center">
+                <!-- Home Link: Masquer sur la page d'accueil -->
+                <li class="{% if request.path == '/' or request.path == '/' %}hidden{% endif %}">
+                    <a href="{% url 'home' %}" class="hover:text-[#ed1c24] transition duration-300">Home</a>
+                </li>
+
+                <!-- About Us Link: Masquer sur la page About -->
+                <li class="{% if request.path == '/about/' or request.path == '/' %}hidden{% endif %}">
+                    <a href="{% url 'about' %}" class="hover:text-[#ed1c24] transition duration-300">About Us</a>
+                </li>
+
+                <!-- Join Us Link: Masquer sur la page Join Us -->
+                <li class="{% if request.path == '/join-us/' or request.path == '/' %}hidden{% endif %}">
+                    <a href="{% url 'join_us' %}" class="hover:text-[#ed1c24] transition duration-300">Join Us</a>
+                </li>
+
+                <!-- Contact Us Link: Masquer sur la page Contact -->
+                <li class="{% if request.path == '/contact/' or request.path == '/' %}hidden{% endif %}">
+                    <a href="{% url 'contact' %}" class="hover:bg-[#ed1c24] px-4 py-2 rounded-md transition duration-300">Contact Us</a>
+                </li>
+
+                <!-- Authenticated User Links -->
+                {% if user.is_authenticated %}
+                    <li class="{% if request.path == '/profile/' %}hidden{% endif %}">
+                        <a href="{% url 'profile' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">My Profile</a>
                     </li>
-                    <!-- About Us -->
                     <li>
-                        <a href="{% url 'about' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'about' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            About Us
-                        </a>
+                        <form method="post" action="{% url 'logout' %}" class="inline-flex items-center">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">
+                                Log Out
+                            </button>
+                        </form>
                     </li>
-                    <!-- Join Us -->
-                    <li>
-                        <a href="{% url 'join_us' %}" class="px-4 py-2 rounded-md transition 
-                            {% if request.resolver_match.url_name == 'join_us' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Join Us
-                        </a>
+                {% else %}
+                    <!-- Guest User Links -->
+                    <li class="{% if request.path == '/login/' %}hidden{% endif %}">
+                        <a href="{% url 'login' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">Log In</a>
                     </li>
-                    <!-- Get a Quote -->
-                    <li>
-                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == '#' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Get a Quote
-                        </a>
+                    <li class="{% if request.path == '/signup/' %}hidden{% endif %}">
+                        <a href="{% url 'signup' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">Sign Up</a>
                     </li>
-                    <!-- Contact Us -->
-                    <li>
-                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'contact' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Contact Us
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>
 
     <!-- Main Content -->
-    <main class="my-10">
-        {% block content %} {% endblock %}
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#006f4e] text-white py-6 mt-10">
+    <footer class="bg-[#006f4e] text-white py-4">
         <div class="container mx-auto text-center">
-            <p>&copy; 2025 Assur'Aimant. All rights reserved.</p>
-            <nav class="mt-4">
-                <a href="{% url 'health_advices' %}" class="text-gray-300 hover:text-white mx-2">Health Advices</a> |
-                <a href="{% url 'cybersecurity_awareness' %}" class="text-gray-300 hover:text-white mx-2">Cybersecurity Awareness</a>
+            <p class="text-sm">&copy; 2025 Assur'Aimant. All rights reserved.</p>
+            <nav class="mt-2">
+                <a href="{% url 'health_advices' %}" class="text-gray-300 hover:text-white mx-2 text-sm">Health Advices</a> |
+                <a href="{% url 'cybersecurity_awareness' %}" class="text-gray-300 hover:text-white mx-2 text-sm">Cybersecurity Awareness</a>
             </nav>
         </div>
     </footer>
@@ -95,3 +87,4 @@
 </body>
 
 </html>
+
