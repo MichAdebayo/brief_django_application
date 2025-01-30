@@ -8,6 +8,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Assur'Aimant{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Raleway:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* Application des polices */
+        body {
+            margin: 0;
+            font-family: 'Playfair Display', sans-serif; /* Police par défaut pour tout le texte */
+            background-color: #FBFCFA;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif; /* Utilisation de Playfair Display pour les titres */
+        }
+
+        h1 {
+            font-size: 2.5rem; /* Taille personnalisée pour les titres principaux */
+            font-weight: 700;
+            letter-spacing: 5px; /* Espacement des lettres pour un effet élégant */
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        p, li, a {
+            font-family: 'Raleway', sans-serif; /* Police Raleway pour le texte normal */
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #bfb8b8; /* Couleur rouge au survol */
+        }
+
+        /* Container for the slideshow */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 45vh; /* Adjust slideshow height */
+            overflow: hidden;
+        }
+
+        /* Blurred background */
+        .slideshow-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px); /* Blur effect */
+            transform: scale(1.1); /* Scale to prevent edge gaps */
+            z-index: -1; /* Behind other content */
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+
+        /* Main image */
+        .slideshow-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain; /* Full image without cropping */
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+    </style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-[#FBFCFA] font-sans scroll-smooth text-gray-800">
@@ -17,53 +97,90 @@
     <div class="container mx-auto flex justify-between items-center px-4">
         <!-- Logo -->
         <h1 class="text-2xl font-bold">
-            <a href="{% url 'home' %}" class="hover:text-[#ed1c24] transition duration-300">Assur'Aimant</a>
+            <a href="{% url 'home' %}" class="hover:text-[#bfb8b8] transition duration-300">Assur'Aimant</a>
         </h1>
 
         <!-- Navigation -->
         <nav>
-            <ul class="flex space-x-6 text-base items-center">
-                <!-- Home Link: Masquer sur la page d'accueil -->
-                <li class="{% if request.path == '/' or request.path == '/' %}hidden{% endif %}">
-                    <a href="{% url 'home' %}" class="hover:text-[#ed1c24] transition duration-300">Home</a>
-                </li>
-
-                <!-- About Us Link: Masquer sur la page About -->
-                <li class="{% if request.path == '/about/' or request.path == '/' %}hidden{% endif %}">
-                    <a href="{% url 'about' %}" class="hover:text-[#ed1c24] transition duration-300">About Us</a>
-                </li>
-
-                <!-- Join Us Link: Masquer sur la page Join Us -->
-                <li class="{% if request.path == '/join-us/' or request.path == '/' %}hidden{% endif %}">
-                    <a href="{% url 'join_us' %}" class="hover:text-[#ed1c24] transition duration-300">Join Us</a>
-                </li>
-
-                <!-- Contact Us Link: Masquer sur la page Contact -->
-                <li class="{% if request.path == '/contact/' or request.path == '/' %}hidden{% endif %}">
-                    <a href="{% url 'contact' %}" class="hover:bg-[#ed1c24] px-4 py-2 rounded-md transition duration-300">Contact Us</a>
-                </li>
-
-                <!-- Authenticated User Links -->
-                {% if user.is_authenticated %}
-                    <li class="{% if request.path == '/profile/' %}hidden{% endif %}">
-                        <a href="{% url 'profile' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">My Profile</a>
+            <ul class="flex space-x-10 text-base items-center">
+                {% if user.is_authenticated and request.resolver_match.url_name == 'profile' %}
+                    <!-- Navigation spécifique pour la page "profil" -->
+                    <li>
+                        <a href="{% url 'home' %}" class="hover:text-[#bfb8b8] transition duration-300">Home</a>
                     </li>
                     <li>
+                        <a href="{% url 'predict' %}" class="hover:text-[#bfb8b8] transition duration-300">Estimate Charges</a>
+                    </li>
+                    <li>
+                        <!-- Profile Button -->
+                        <a href="{% url 'profile' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                        {% if request.resolver_match.url_name == 'profile' %}font-bold{% endif %}">
+                        My Profile</a>
+                    </li>
+                    <li>
+                        <!-- Logout Button -->
                         <form method="post" action="{% url 'logout' %}" class="inline-flex items-center">
                             {% csrf_token %}
-                            <button type="submit" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">
+                            <button type="submit" class="border border-white text-white px-6 py-1 rounded-lg hover:bg-white hover:text-[#006f4e] transition duration-300 font-medium tracking-wide shadow-sm">
                                 Log Out
                             </button>
                         </form>
-                    </li>
                 {% else %}
-                    <!-- Guest User Links -->
-                    <li class="{% if request.path == '/login/' %}hidden{% endif %}">
-                        <a href="{% url 'login' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">Log In</a>
+                    <!-- Navigation générale -->
+                    <li>
+                        <a href="{% url 'home' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                            {% if request.resolver_match.url_name == 'home' %}font-bold{% endif %}">
+                            Home
+                        </a>
                     </li>
-                    <li class="{% if request.path == '/signup/' %}hidden{% endif %}">
-                        <a href="{% url 'signup' %}" class="bg-[#004d3a] hover:bg-[#ed1c24] px-4 py-2 rounded-md font-bold transition duration-300">Sign Up</a>
+                    <li>
+                        <a href="{% url 'about' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                            {% if request.resolver_match.url_name == 'about' %}font-bold{% endif %}">
+                            About Us
+                        </a>
                     </li>
+                    <li>
+                        <a href="{% url 'join_us' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                            {% if request.resolver_match.url_name == 'join_us' %}font-bold{% endif %}">
+                            Join Us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'contact' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                            {% if request.resolver_match.url_name == 'contact' %}font-bold{% endif %}">
+                            Contact Us
+                        </a>
+                    </li>
+
+                    <!-- Authenticated User Links -->
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'profile' %}" class="hover:text-[#bfb8b8] transition duration-300 
+                            {% if request.resolver_match.url_name == 'profile' %}font-bold{% endif %}">
+                            My Profile
+                        </a>
+                        </li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" class="inline-flex items-center">
+                                {% csrf_token %}
+                                <button type="submit" class="border border-white text-white px-6 py-2 rounded-lg hover:bg-white hover:text-[#006f4e] transition duration-300 font-medium tracking-wide shadow-sm">
+                                    Log Out
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <!-- Guest User Links -->
+                        <li>
+                            <a href="{% url 'login' %}" class="border border-white text-white px-6 py-2 rounded-lg hover:bg-white hover:text-[#006f4e] transition duration-300 font-medium tracking-wide shadow-sm">
+                                Log In
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'signup' %}" class="border border-white text-white px-6 py-2 rounded-lg hover:bg-white hover:text-[#006f4e] transition duration-300 font-medium tracking-wide shadow-sm">
+                                Sign Up
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             </ul>
         </nav>
@@ -89,4 +206,3 @@
 </body>
 
 </html>
-

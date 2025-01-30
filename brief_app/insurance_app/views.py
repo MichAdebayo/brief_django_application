@@ -40,7 +40,7 @@ class HomeView(TemplateView):
                 'title': 'Assur\'Cares',
                 'links': [
                     {'name': 'Need a Quote', 'url': reverse('join_us')},
-                    {'name': 'Need Help', 'url': reverse('contact_form')},
+                    {'name': 'Need Help', 'url': reverse('contact')},
                 ]
             },
             {
@@ -284,20 +284,3 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
             response = super().form_valid(form)
             messages.success(self.request, 'Your charges has been updated!')
             return response
-
-
-class UserLogoutView(LoginRequiredMixin, View):
-    template_name = 'insurance_app/logout_user.html'
-    next_page = reverse_lazy('logout_user')
-
-    def get(self, request):
-        # Handle GET requests with confirmation page
-        user = self.request.user
-        return render(request, self.template_name, {'user': user})
-    
-    def post(self, request):
-        # Handle actual logout
-        user = self.request.user
-        logout(request)
-        return render(request, self.template_name, {'user': user})
-    

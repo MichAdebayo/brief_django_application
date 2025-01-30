@@ -138,10 +138,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Ensure this points to your app's static folder:
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# Répertoire contenant vos fichiers statiques pendant le développement
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# Répertoire où collecter les fichiers statiques pour la production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 AUTH_USER_MODEL = 'insurance_app.UserProfile'
 

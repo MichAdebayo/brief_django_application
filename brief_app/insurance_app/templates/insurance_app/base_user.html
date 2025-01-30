@@ -64,10 +64,10 @@
                     </li>
                     <!-- Contact Us -->
                     <li>
-                        <form action="{% url 'logout_user' %}" method="POST" class="inline">
+                        <form action="{% url 'logout' %}" method="POST" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="px-4 py-2 rounded transition 
-                                {% if request.resolver_match.url_name == 'logout_user' %}
+                                {% if request.resolver_match.url_name == 'logout' %}
                                     bg-[#026f4e] text-white shadow-lg
                                 {% else %}
                                     hover:bg-[#ed1c24] hover:text-white

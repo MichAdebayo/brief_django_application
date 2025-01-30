@@ -1,5 +1,5 @@
 {% extends 'insurance_app/base.html' %}
-{% load static %}
+{% load static %} 
 
 {% block title %}Welcome to Assur'Aimant{% endblock %}
 
@@ -14,6 +14,28 @@
         <h2 class="text-lg md:text-2xl italic text-black">
             Because Your Health Deserves a Plan That Fits.
         </h2>
+    </div>
+
+    <!-- Slideshow Section -->
+    <div class="slideshow-container">
+        <!-- Blurred background -->
+        <div
+            class="slideshow-blur"
+            id="slideshow-blur"
+            style="background-image: url('{% static "images/background1.svg" %}")">
+        </div>
+    
+        <!-- Main image -->
+        <div
+            class="slideshow-image"
+            id="slideshow-image"
+            style="background-image: url('{% static "images/background1.svg" %}")">
+        </div>
+
+        <!-- Slideshow text -->
+        <div id="slideshow-text" class="absolute inset-0 flex items-center justify-center text-white text-center">
+            <h1 class="text-4xl font-bold">Welcome to Assur'Aimant</h1>
+        </div>
     </div>
 
     <!-- Info Bar simplifiée -->
@@ -32,4 +54,7 @@
         </div>
     </div>
 </div>
+
+<!-- Include the external JavaScript file -->
+<script src="{% static 'js/slideshow.js' %}"></script>
 {% endblock %}

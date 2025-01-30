@@ -1,0 +1,52 @@
+/* Container for the slideshow */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 50vh; /* Adjust slideshow height */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Blurred background */
+.slideshow-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px); /* Blur effect */
+    transform: scale(1.1); /* Scale to prevent edge gaps */
+    z-index: -1; /* Behind other content */
+    opacity: 1;
+    transition: opacity 2s ease-in-out;
+}
+
+/* Main image */
+.slideshow-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain; /* Full image without cropping */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    opacity: 1;
+    transition: opacity 2s ease-in-out;
+}
+
+/* Slideshow text */
+#slideshow-text {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 2rem;
+    font-weight: bold;
+    transition: opacity 1s ease-in-out;
+}
