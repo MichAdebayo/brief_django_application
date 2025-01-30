@@ -38,11 +38,8 @@
         opacity: 1;
         transition: opacity 2s ease-in-out;
     }
-
-    
-    
-    
     </style>
+
 </head>
 
 <body class="min-h-screen flex flex-col text-whitesmoke font-sans bg-[#FBFCFA]">
@@ -82,7 +79,7 @@
                     </li>
                     <!-- Logout -->
                     <li>
-                        <a href="{% url 'join_us' %}" class="px-4 py-2 rounded-md transition 
+                        <a href="{% url 'logout_user' %}" class="px-4 py-2 rounded-md transition 
                             {% if request.resolver_match.url_name == 'join_us' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
@@ -122,7 +119,7 @@
             <!-- Quick Access -->
             <div class="my-8">
                 <h3 class="text-2xl font-semibold text-emerald-900 py-4">Your charges</h3>
-                <a href="{% url 'about' %}" class="bg-[#009b9d] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#ed1c24]">
+                <a href="{% url 'predict' %}" class="bg-[#009b9d] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#ed1c24]">
                     Estimate my charges
                 </a>
             </div>
@@ -130,16 +127,16 @@
             <!-- Dashboard -->
             <div class="my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-md shadow-md">
-                    <h4 class="text-xl font-bold text-emerald-900">My appointments</h4>
-                    <a href="{% url 'appointment_list_and_create' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">View My Appointments</a>
+                    <h4 class="text-xl font-bold text-emerald-900">My Appointments</h4>
+                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my appointments</a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
-                    <h4 class="text-xl font-bold text-emerald-900">My Account</h4>
-                    <a href="{% url 'profile' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Edit My Profile </a>
+                    <h4 class="text-xl font-bold text-emerald-900">View Estimate History</h4>
+                    <a href="{% url 'prediction_history' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my esitmated charges </a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">My Password</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Change My Password</a>
+                    <a href="{% url 'changepassword' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">change my password</a>
                 </div>
             </div>
         </main>
