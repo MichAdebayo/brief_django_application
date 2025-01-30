@@ -50,7 +50,7 @@ class UserProfile(AbstractUser):
         return round(self.weight / ((self.height / 100) ** 2), 1)
 
     def __str__(self):
-        return f"{self.username} Profile"
+        return f"{self.username}"
 
 class PredictionHistory(models.Model):
     user = models.ForeignKey(
