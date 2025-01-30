@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from .views import (solve_message,predict_charges,CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, 
                     JoinUsView, ApplyView, TemplateView, apply,contact_view, 
                     HealthAdvicesView, CybersecurityAwarenessView,message_list_view, ChangePasswordView, 
-                    PredictChargesView, UserLogoutView,WelcomeView, PredictionHistoryView)
+                    PredictChargesView, UserLogoutView,WelcomeView, PredictionHistoryView,book_appointment)
 
 
 urlpatterns = [
@@ -11,17 +11,18 @@ urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout_user'), 
+    path('welcome/', WelcomeView.as_view(), name='welcome'),
 
     # For the users
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('predict-charges/', PredictChargesView.as_view(), name='predict'),
     path('prediction-history/', PredictionHistoryView.as_view(), name='prediction_history'),
+    path("book/", book_appointment, name="book_appointment"),
     #path('admin-appointments/', admin_appointment_list, name='admin_appointment_list'),
 
     # Other website pages
     path('about/',AboutView.as_view(), name='about'),
     path('join-us/', JoinUsView.as_view(), name='join_us'),
-    path('welcome/', WelcomeView.as_view(), name='welcome'),
     path('apply/', apply, name='apply'),
     path('contact/', contact_view, name='contact'),
     path('apply/', ApplyView.as_view(), name='apply'),

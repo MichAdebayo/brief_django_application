@@ -5,8 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage, PredictionHistory
-from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm
+from .models import UserProfile, Job, ContactMessage, PredictionHistory, Appointment
+from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm, AppointmentForm
 from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
@@ -21,8 +21,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import ListView
 from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
+from django.utils.timezone import now  
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 #### Eliandy ####
 
@@ -122,7 +123,7 @@ def solve_message(request, message_id):
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=400)
 
 
-# Dynamic quote :
+# Dynamic quote when not logged in:
 def predict_charges(request):
     prediction = None
 
@@ -179,6 +180,43 @@ def predict_charges(request):
 
     # If not GET or POST, return an error
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+##appoinment booking view####
+
+@login_required
+def book_appointment(request):
+    today = timezone.now().date()  # Get today's date in YYYY-MM-DD format
+    
+    # Handle form submission (POST request)
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            # Save the appointment data
+            appointment = form.save(commit=False)
+            appointment.user = request.user  # Associate the logged-in user
+            appointment.save()
+
+            messages.success(request, 'Your appointment has been booked successfully!')
+            return redirect('book_appointment')  # Redirect to the same page after saving
+    else:
+        form = AppointmentForm()
+
+    # Get upcoming and past appointments for display
+    upcoming_appointments = Appointment.objects.filter(
+        user=request.user, date__gte=today
+    ).order_by('date')
+
+    past_appointments = Appointment.objects.filter(
+        user=request.user, date__lt=today
+    ).order_by('-date')
+
+    return render(request, 'insurance_app/book_appointment.html', {
+        'today': today,
+        'form': form,
+        'upcoming_appointments': upcoming_appointments,
+        'past_appointments': past_appointments,
+    })
 
 
 ###### Eliandy's Code Ends Here ######

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.conf import settings
 
 class UserProfile(AbstractUser):
     class SmokerType(models.TextChoices):
@@ -95,7 +95,7 @@ class PredictionHistory(models.Model):
         return f"{self.user} prediction @ {self.timestamp:%Y-%m-%d}"
     
 
-# For the join us job application area
+# For the join us job application form
 class JobApplication(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
@@ -130,5 +130,23 @@ class ContactMessage(models.Model):
     
 
 
+#Booking appointments
+
+from datetime import date
+
+class Appointment(models.Model):
+    REASON_CHOICES = [
+        ("Consultation", "Consultation"),
+        ("Insurance Claim", "Insurance Claim"),
+        ("Policy Inquiry", "Policy Inquiry"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50, choices=REASON_CHOICES)
+    date = models.DateField(default=date(2025, 2, 3))  # Correct default date
+    time = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.reason} on {self.date} at {self.time}"
 
 

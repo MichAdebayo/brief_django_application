@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     
+    
 
     # Django
     'django.contrib.admin',

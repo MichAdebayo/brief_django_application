@@ -1,14 +1,7 @@
-import json
 from django import template
 
 register = template.Library()
 
 @register.filter
-def jsonify(value):
-    return json.dumps(value)
-
-
-
-@register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
+def time_range(value):
+    return [f"{hour:02d}:00" for hour in range(9, 19)]
