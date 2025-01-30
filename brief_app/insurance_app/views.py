@@ -185,7 +185,7 @@ class SignupView(CreateView):                           # Generic view for creat
 
 class CustomLoginView(LoginView):
     template_name = 'insurance_app/login.html'
-    redirect_authenticated_user = False
+    redirect_authenticated_user = True
 
     def get_success_url(self):
         # Redirect to the profile page after successful login
@@ -194,8 +194,20 @@ class CustomLoginView(LoginView):
     def dispatch(self, request, *args, **kwargs):
         # Redirect authenticated users to the profile page
         if self.request.user.is_authenticated:
-            return redirect('welcome')
+            return redirect('profile')
         return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        # Check if 'remember me' is checked
+        remember_me = self.request.POST.get('remember_me', None) is not None
+
+        # Set session expiry accordingly
+        if not remember_me:
+            self.request.session.set_expiry(0)  # Expire session on browser close
+        else:
+            self.request.session.set_expiry(1209600)  # Session lasts 2 weeks
+
+        return super().form_valid(form)
 
 
 # Template for user profile view
@@ -414,37 +426,3 @@ class PredictionHistoryView(LoginRequiredMixin, ListView):
             )['predicted_charges__avg']
         })
         return context
-
-
-#################################################################################
-
-    # class SignupView(CreateView):
-#     model = UserProfile
-#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-#     template_name = 'insurance_app/signup.html'
-#     success_url = reverse_lazy('login')
-#     # redirect_authenticated_user = True  # Redirect already logged-in users
-
-#     def form_valid(self, form):
-#         user = form.save(commit=False)
-#         user.set_password(form.cleaned_data['password'])
-#         user.save()
-#         return super().form_valid(form)
-
-# class CustomLoginView(LoginView):
-#     template_name = 'insurance_app/login.html' 
-#     success_url = reverse_lazy('profile')
-#     def form_valid(self, form):
-#         # Authenticate the user
-#         username = form.cleaned_data.get('username')
-#         password = form.cleaned_data.get('password')
-#         user = authenticate(self.request, username=username, password=password)
-
-#         if user is not None:
-#             # Log in the user and redirect
-#             login(self.request, user)
-#             return super().form_valid(form)
-#         else:
-#             # Invalid credentials, show error message
-#             form.add_error(None, 'Invalid username or password.') # Add a general error message
-#             return self.form_invalid(form)
