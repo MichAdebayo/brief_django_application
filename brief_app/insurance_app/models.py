@@ -95,64 +95,6 @@ class PredictionHistory(models.Model):
     def __str__(self):
         return f"{self.user} prediction @ {self.timestamp:%Y-%m-%d}"
     
-# class UserProfile(AbstractUser):
-#     class SmokerType(models.TextChoices):
-#         YES = 'Yes', 'Yes'
-#         NO = 'No', 'No'
-
-#     class RegionType(models.TextChoices):
-#         NORTHEAST = 'Northeast', 'Northeast'
-#         NORTHWEST = 'Northwest', 'Northwest'
-#         SOUTHEAST = 'Southeast', 'Southeast'
-#         SOUTHWEST = 'Southwest', 'Southwest'
-
-#     class SexType(models.TextChoices):
-#         MALE = 'Male', 'Male'
-#         FEMALE = 'Female', 'Female'
-
-    
-#     age = models.IntegerField(default=0)
-#     weight = models.IntegerField(default=0)
-#     height = models.IntegerField(default=0) 
-#     num_children = models.IntegerField(default=0) 
-#     smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
-#     region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
-#     sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)
-
-#     def __str__(self):
-#         return self.username
-
-# class PredictionHistory(models.Model):
-#     user = models.ForeignKey(
-#         UserProfile, 
-#         on_delete=models.CASCADE,
-#         related_name='predictions'
-#     )
-#     timestamp = models.DateTimeField(auto_now_add=True)
-    
-#     # Snapshot of user data at prediction time
-#     age = models.IntegerField()
-#     weight = models.IntegerField()
-#     height = models.IntegerField()
-#     num_children = models.IntegerField()
-#     smoker = models.CharField(max_length=10)
-#     region = models.CharField(max_length=10)
-#     sex = models.CharField(max_length=10)
-    
-#     predicted_charges = models.DecimalField(
-#         max_digits=10, 
-#         decimal_places=2
-#     )
-
-#     class Meta:
-#         ordering = ['-timestamp']
-#         verbose_name_plural = "Prediction History"
-
-#     def __str__(self):
-#         return f"{self.user.username} - {self.timestamp}"
-    
-
-######################################################
 
 #For the join us job application area
  
@@ -165,7 +107,6 @@ class JobApplication(models.Model):
     def __str__(self):
         return self.name
     
-
 
 #To create a list of jobs from the admin page
 

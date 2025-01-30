@@ -19,7 +19,6 @@ import pandas as pd
 import os
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import ListView
-from django.utils import timezone
 from django.db.models import Avg
 
 # Create your views here.
@@ -183,18 +182,19 @@ class SignupView(CreateView):                           # Generic view for creat
     template_name = 'insurance_app/signup.html'         # HTML template for displaying the form
     success_url = reverse_lazy('login')  
 
+
 class CustomLoginView(LoginView):
     template_name = 'insurance_app/login.html'
     redirect_authenticated_user = False
 
     def get_success_url(self):
         # Redirect to the profile page after successful login
-        return reverse_lazy('login')
+        return reverse_lazy('welcome')
 
     def dispatch(self, request, *args, **kwargs):
         # Redirect authenticated users to the profile page
         if self.request.user.is_authenticated:
-            return redirect('profile')
+            return redirect('welcome')
         return super().dispatch(request, *args, **kwargs)
 
 
