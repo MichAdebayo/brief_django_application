@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 class PredictChargesForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['smoker', 'age', 'weight', 'height', 'num_children']
+        fields = ['age',  'height', 'weight', 'num_children', 'smoker']
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

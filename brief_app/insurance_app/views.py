@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage, Appointment
+from .models import UserProfile, Job, ContactMessage, PredictionHistory, Appointment
 from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm,AppointmentForm
 from django.http import HttpResponse
 import pickle
@@ -16,14 +16,16 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.conf import settings
 from django.views import View 
 import pandas as pd
+import os
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.generic import ListView
+from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
 from .models import Availability
 
-
-#####Eliandy####
+#### Eliandy ####
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -180,9 +182,6 @@ def predict_charges(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
-
-
-
 #Admin view for appointments
 @staff_member_required
 def admin_appointment_list(request):
@@ -196,6 +195,9 @@ def admin_appointment_list(request):
         'past_appointments': past_appointments
     })
 
+###### Eliandy's Code Ends Here ######
+
+###### Dorothée's Code Begin Here ######
 
 class SignupView(CreateView):                           # Generic view for creating an object
     model = UserProfile                                 # Model used
@@ -203,20 +205,34 @@ class SignupView(CreateView):                           # Generic view for creat
     template_name = 'insurance_app/signup.html'         # HTML template for displaying the form
     success_url = reverse_lazy('login')  
 
+
 class CustomLoginView(LoginView):
     template_name = 'insurance_app/login.html'
-    redirect_authenticated_user = False
+    redirect_authenticated_user = True
 
     def get_success_url(self):
         # Redirect to the profile page after successful login
-        return reverse_lazy('login')
+        return reverse_lazy('welcome')
 
     def dispatch(self, request, *args, **kwargs):
         # Redirect authenticated users to the profile page
         if self.request.user.is_authenticated:
             return redirect('profile')
         return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        # Check if 'remember me' is checked
+        remember_me = self.request.POST.get('remember_me', None) is not None
 
+        # Set session expiry accordingly
+        if not remember_me:
+            self.request.session.set_expiry(0)  # Expire session on browser close
+        else:
+            self.request.session.set_expiry(1209600)  # Session lasts 2 weeks
+
+        return super().form_valid(form)
+
+###### Dorothée's Code Ends Here ######
 
 # Template for user profile view
 class UserProfileView(LoginRequiredMixin, UpdateView): 
@@ -227,7 +243,6 @@ class UserProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         # Return the UserProfile object for the logged-in user
-        print(self.request.user)
         return self.request.user
     
     def form_valid(self, form):
@@ -248,24 +263,6 @@ class ChangePasswordView(PasswordChangeView):
         # Add a success message
         messages.success(self.request, 'Your password has been changed successfully!')
         return response
-    
-
-class PredictChargesView(LoginRequiredMixin, UpdateView): 
-    model = get_user_model()
-    form_class = PredictChargesForm
-    template_name = 'insurance_app/predict.html'
-    success_url = reverse_lazy('predict')
-
-    def get_object(self, queryset=None):
-        # Return the UserProfile object for the logged-in user
-        print(self.request.user)
-        return self.request.user
-    
-    def form_valid(self, form):
-            # Save the form and display a success message
-            response = super().form_valid(form)
-            messages.success(self.request, 'Your charges has been updated!')
-            return response
 
 
 class UserLogoutView(LoginRequiredMixin, View):
@@ -282,222 +279,172 @@ class UserLogoutView(LoginRequiredMixin, View):
         user = self.request.user
         logout(request)
         return render(request, self.template_name, {'user': user})
-    
-    
-# class PredictChargesView(LoginRequiredMixin, UpdateView):
-#     model = UserProfile  # Specify the model to work with
-#     form_class = PredictChargesForm  # Use your custom form
-#     template_name = 'insurance_app/predict.html'  # Template for rendering the form
-#     success_url = reverse_lazy('predict')  # URL to redirect to after successful form submission
 
-#     def get_object(self, queryset = None):
-#         return self.request.user
 
-#     def form_valid(self, form):
-#         user_profile = self.get_object()
+class PredictChargesView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    form_class = PredictChargesForm
+    template_name = 'insurance_app/predict.html'
+    success_url = reverse_lazy('predict')
 
-#         # Update values from form
-#         user_profile.age = form.cleaned_data.get('age')
-#         user_profile.weight = form.cleaned_data.get('weight')
-#         user_profile.height = form.cleaned_data.get('height')
-#         user_profile.num_children = form.cleaned_data.get('num_children')
-#         user_profile.smoker = form.cleaned_data.get('smoker')
-#         # user_profile.save()  # Save updated profile data
+    def get_object(self, queryset=None):
+        return self.request.user
 
-#         if user_profile.weight is None or user_profile.height is None or user_profile.height == 0:
-#             return render(self.request, self.template_name, {
-#                 "error": "Invalid weight or height values.",
-#                 "form": form
-#             })
-
-#         # Calculate BMI
-#         bmi = user_profile.weight / ((user_profile.height / 100) ** 2)
-
-#         personal_data = {
-#             "age": user_profile.age,
-#             "bmi": bmi,
-#             "smoker": user_profile.smoker,
-#             "children": user_profile.num_children,
-#         }
-
-#         # Preprocess the data
-#         preprocessed_data = self.preprocess_data(personal_data)
-
-#         print("Preprocessed Data:", preprocessed_data)  # Debugging
-
-#         # Load the model
-#         model = self.load_model()
-#         if model is None:
-#             return render(self.request, self.template_name, {
-#                 "error": "Failed to load the model.",
-#                 "form": form
-#             })
-
-#         # Predict charges
-#         predicted_charges = model.predict(preprocessed_data)
-#         print("Predicted Charges:", predicted_charges)  # Debugging
-
-#         return render(self.request, self.template_name, {
-#             "predicted_charges": round(predicted_charges[0], 2),
-#             "form": form
-#         })
-    
-#     def categorize_bmi(self, bmi):
-#         if bmi < 18.5:
-#             return "under_weight"
-#         elif 18.5 <= bmi < 25:
-#             return "normal_weight"
-#         elif 25 <= bmi < 30:
-#             return "over_weight"
-#         else:
-#             return "obese"
-
-#     def categorize_age(self, age):
-#         if 18 < age < 26:
-#             return "young_adult"
-#         elif 26 <= age < 36:
-#             return "early_adulthood"
-#         elif 36 <= age < 46:
-#             return "mid_adulthood"
-#         else:
-#             return "late_adulthood"
-
-#     def preprocess_data(self, data):
-#         # Define the expected columns (must match the model's input requirements)
-#         expected_columns = [
-#             "smoker",
-#             "age",
-#             "bmi",
-#             "age_category_young_adult",
-#             "age_category_early_adulthood",
-#             "bmi_category_over_weight",
-#             "bmi_category_obese",
-#             "children_str_0",
-#         ]
-
-#         # Create a DataFrame from the input data
-#         df = pd.DataFrame([data])
-
-#         # Convert smoker to binary (1 for "Yes", 0 for "No")
-#         df["smoker"] = df["smoker"].map({"Yes": 1, "No": 0})
-
-#         # Categorize age and bmi
-#         df["age_category"] = df["age"].apply(self.categorize_age)
-#         df["bmi_category"] = df["bmi"].apply(self.categorize_bmi)
-
-#         # Convert children to string (for one-hot encoding)
-#         df["children_str"] = df["children"].apply(lambda x: str(x))
-
-#         # Perform one-hot encoding for categorical columns
-#         df = pd.get_dummies(df, columns=["age_category", "bmi_category", "children_str"], dtype=(int))
-
-#         # Ensure all expected columns are present
-#         for col in expected_columns:
-#             if col not in df.columns:
-#                 df[col] = 0  # Add missing columns with default value 0
-
-#         # Reorder columns to match the model's expectations
-#         df = df[expected_columns]
-
-#         # Debugging: Print the final preprocessed DataFrame
-#         print("Final Preprocessed DataFrame:")
-#         print(df)
-
-#         return df
-
-#     def load_model(self):
-#         try:
-#             model_path = os.path.join(settings.BASE_DIR, 'insurance_app/model/model.pkl')
-#             with open(model_path, "rb") as file:
-#                 model = pickle.load(file)
-#             return model
-#         except FileNotFoundError:
-#             print("Error: The model file 'model.pkl' was not found.")
-#             return None
-#         except pickle.UnpicklingError:
-#             print("Error: The file could not be unpickled. Ensure it is a valid pickle file.")
-#             return None
+    def form_valid(self, form):
+        user_profile = self.get_object()
         
-    # def get_context_data(self, **kwargs):
-    #     # Add the predicted charges to the context (if available)
-    #     context = super().get_context_data(**kwargs)
-    #     if hasattr(self, 'predicted_charges'):
-    #         context['predicted_charges'] = self.predicted_charges
-    #     return context
-    
-    # def form_valid(self, form):
-    #     # Fetch the user's profile data
-    #     user_profile = self.get_object()
+        # Update and save user profile
+        user_profile.age = form.cleaned_data['age']
+        user_profile.weight = form.cleaned_data['weight']
+        user_profile.height = form.cleaned_data['height']
+        user_profile.num_children = form.cleaned_data['num_children']
+        user_profile.smoker = form.cleaned_data['smoker']
+        user_profile.save()  # Uncommented to persist changes
 
-    #     # Prepare input data for the model
-    #     age = form.cleaned_data['age']
-    #     bmi = form.cleaned_data['weight'] / ((form.cleaned_data['height'] / 100) ** 2)  # Calculate BMI
-    #     children = form.cleaned_data['num_children']
-    #     smoker = form.cleaned_data['smoker']
+        # Validate inputs
+        if user_profile.height <= 0:
+            return self.form_invalid(form, "Invalid height value")
 
-    #     personal_data = {"age": age, "bmi": bmi, "smoker": smoker, "children": children}
+        # Calculate BMI using model property
+        try:
+            bmi = user_profile.bmi
+        except ZeroDivisionError:
+            return self.form_invalid(form, "Invalid height value (cannot be zero)")
 
-    #     # Preprocess the data
-    #     preprocessed_data = self.preprocess_data(personal_data)
+        # Create prediction data
+        prediction_data = {
+            "age": user_profile.age,
+            "bmi": bmi,
+            "smoker": user_profile.smoker,
+            "children": user_profile.num_children,
+            "region": user_profile.region,
+            "sex": user_profile.sex
+        }
 
-    #     # Debugging: Print the preprocessed data
-    #     print("Preprocessed Data:")
-    #     print(preprocessed_data)
+        # Preprocess and predict
+        preprocessed_data = self.preprocess_data(prediction_data)
+        model = self.load_model()
+        
+        if not model:
+            return self.form_invalid(form, "Failed to load prediction model")
 
-    #     # Load the model
-    #     model = self.load_model()
-    #     if model is None:
-    #         return render(self.request, self.template_name, {"error": "Failed to load the model.", "form": form})
+        predicted_charges = model.predict(preprocessed_data)
+        prediction_value = round(predicted_charges[0], 2)
 
-    #     # Predict charges
-    #     predicted_charges = model.predict(preprocessed_data)
+        # Save prediction history
+        PredictionHistory.objects.create(
+            user=user_profile,
+            age=user_profile.age,
+            weight=user_profile.weight,
+            height=user_profile.height,
+            num_children=user_profile.num_children,
+            smoker=user_profile.smoker,
+            region=user_profile.region,
+            sex=user_profile.sex,
+            predicted_charges=prediction_value
+        )
 
-    #     # Debugging: Print the predicted charges
-    #     print("Predicted Charges:")
-    #     print(predicted_charges)
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            predicted_charges=prediction_value,
+            recent_predictions=user_profile.insurance_predictions.all()[:5]
+        ))
 
-    #     # Store the predicted charges in the instance for use in the template
-    #     self.predicted_charges = round(predicted_charges[0], 2)
+    def form_invalid(self, form, error_message):
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
 
-    #     # Render the template with the predicted charges and updated form
-    #     return self.render_to_response(self.get_context_data(form=form))
+    def categorize_bmi(self, bmi):
+        if bmi < 18.5:
+            return "under_weight"
+        elif 18.5 <= bmi < 25:
+            return "normal_weight"
+        elif 25 <= bmi < 30:
+            return "over_weight"
+        else:
+            return "obese"
+
+    def categorize_age(self, age):
+        if 18 < age < 26:
+            return "young_adult"
+        elif 26 <= age < 36:
+            return "early_adulthood"
+        elif 36 <= age < 46:
+            return "mid_adulthood"
+        else:
+            return "late_adulthood"
+
+    def preprocess_data(self, data):
+        # Define the expected columns (must match the model's input requirements)
+        expected_columns = [
+            "smoker",
+            "age",
+            "bmi",
+            "age_category_young_adult",
+            "age_category_early_adulthood",
+            "bmi_category_over_weight",
+            "bmi_category_obese",
+            "children_str_0",
+        ]
+
+        # Create a DataFrame from the input data
+        df = pd.DataFrame([data])
+
+        # Convert smoker to binary (1 for "Yes", 0 for "No")
+        df["smoker"] = df["smoker"].map({"Yes": 1, "No": 0})
+
+        # Categorize age and bmi
+        df["age_category"] = df["age"].apply(self.categorize_age)
+        df["bmi_category"] = df["bmi"].apply(self.categorize_bmi)
+
+        # Convert children to string (for one-hot encoding)
+        df["children_str"] = df["children"].apply(lambda x: str(x))
+
+        # Perform one-hot encoding for categorical columns
+        df = pd.get_dummies(df, columns=["age_category", "bmi_category", "children_str"], dtype=(int))
+
+        # Ensure all expected columns are present
+        for col in expected_columns:
+            if col not in df.columns:
+                df[col] = 0  # Add missing columns with default value 0
+
+        # Reorder columns to match the model's expectations
+        df = df[expected_columns]
+
+        return df
+
+    def load_model(self):
+        try:
+            model_path = os.path.join(settings.BASE_DIR, 'insurance_app/model/model.pkl')
+            with open(model_path, "rb") as file:
+                model = pickle.load(file)
+            return model
+        except FileNotFoundError:
+            print("Error: The model file 'model.pkl' was not found.")
+            return None
+        except pickle.UnpicklingError:
+            print("Error: The file could not be unpickled. Ensure it is a valid pickle file.")
+            return None
 
 
+class PredictionHistoryView(LoginRequiredMixin, ListView):
+    model = PredictionHistory
+    template_name = 'insurance_app/prediction_history.html'
+    context_object_name = 'predictions'
+    paginate_by = 10
 
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)\
+            .select_related('user')\
+            .order_by('-timestamp')
 
-
-
-
-#################################################################################
-
-
-    # class SignupView(CreateView):
-#     model = UserProfile
-#     form_class = UserSignupForm  # Utilisez un formulaire personnalisé
-#     template_name = 'insurance_app/signup.html'
-#     success_url = reverse_lazy('login')
-#     # redirect_authenticated_user = True  # Redirect already logged-in users
-
-#     def form_valid(self, form):
-#         user = form.save(commit=False)
-#         user.set_password(form.cleaned_data['password'])
-#         user.save()
-#         return super().form_valid(form)
-
-# class CustomLoginView(LoginView):
-#     template_name = 'insurance_app/login.html' 
-#     success_url = reverse_lazy('profile')
-#     def form_valid(self, form):
-#         # Authenticate the user
-#         username = form.cleaned_data.get('username')
-#         password = form.cleaned_data.get('password')
-#         user = authenticate(self.request, username=username, password=password)
-
-#         if user is not None:
-#             # Log in the user and redirect
-#             login(self.request, user)
-#             return super().form_valid(form)
-#         else:
-#             # Invalid credentials, show error message
-#             form.add_error(None, 'Invalid username or password.') # Add a general error message
-#             return self.form_invalid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'user_profile': self.request.user,
+            'total_predictions': self.get_queryset().count(),
+            'average_charges': self.get_queryset().aggregate(
+                Avg('predicted_charges')
+            )['predicted_charges__avg']
+        })
+        return context

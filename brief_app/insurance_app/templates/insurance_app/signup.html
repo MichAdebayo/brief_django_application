@@ -1,71 +1,57 @@
-{% load static %}
+{% extends 'insurance_app/base.html' %}
 
+{% block title %}Sign Up{% endblock %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        /* Couleurs personnalisées */
-        .bg-primary {
-            background-color: #1d1b1e; /* Fond principal */
-        }
-        .bg-secondary {
-            background-color: #221e1e; /* Fond du formulaire */
-        }
-        .bg-custom {
-            background-color: #a37a41; /* Couleur personnalisée */
-        }
-        .hover-bg-custom:hover {
-            background-color: #8c6936; /* Couleur légèrement plus foncée pour le hover */
-        }
-    </style>
-</head>
-<body class="bg-primary flex items-center justify-center min-h-screen">
-    <div class="bg-secondary text-white rounded-lg shadow-lg p-8 w-full max-w-sm">
-        <div class="text-center mb-6">
-            <div class="flex items-center justify-center w-36 h-36 mx-auto">
-                <img src="{% static 'images/logo_assuraimant_sfcb.svg' %}" alt="Logo AssurAimant" class="w-full h-full object-contain">
+{% block main_classes %}flex items-center justify-center min-h-screen bg-[#FBFCFA]{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center w-full py-10">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <!-- Icon at the top -->
+        <div class="flex justify-center mb-6">
+            <div class="w-12 h-12 bg-[#006f4e] rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
             </div>
-            <h2 class="text-2xl font-bold">Create an account</h2>
         </div>
+        <!-- Title and description -->
+        <h2 class="text-2xl font-bold text-center text-[#006f4e] mb-2">Create your account</h2>
+        <p class="text-center text-gray-500 mb-6">Join us and start your journey</p>
+        
+        <!-- Form -->
         <form method="post" action="{% url 'signup' %}" class="space-y-4">
             {% csrf_token %}
-            {{ form.non_field_errors }}
             <div>
-                {{ form.username.errors }}
-                <input type="text" name="username" placeholder="Enter your username" 
-                        class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-amber-600" required>
+                <label for="username" class="block text-sm font-medium text-[#006f4e]">Username</label>
+                <input type="text" id="username" name="username" placeholder="Your username"
+                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#006f4e] focus:border-[#006f4e] text-sm" required>
             </div>
             <div>
-                {{ form.password.errors }}
-                <input type="password" name="password" placeholder="Enter your password" 
-                        class="w-full p-3 bg-gray-700 rounded text-sm focus:outline-none focus:ring-2 focus:ring-marron-500" required>
+                <label for="email" class="block text-sm font-medium text-[#006f4e]">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com"
+                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#006f4e] focus:border-[#006f4e] text-sm" required>
             </div>
-            <button type="submit" class="w-full py-3 bg-custom hover-bg-custom rounded text-sm font-bold transition duration-200">
+            <div>
+                <label for="password" class="block text-sm font-medium text-[#006f4e]">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••"
+                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#006f4e] focus:border-[#006f4e] text-sm" required>
+            </div>
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-[#006f4e]">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••"
+                    class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-[#006f4e] focus:border-[#006f4e] text-sm" required>
+            </div>
+            <button type="submit"
+                class="w-full py-3 bg-[#006f4e] hover:bg-[#004d3a] text-white font-bold rounded-md transition duration-200">
                 Sign Up
             </button>
         </form>
-        <p class="text-center text-gray-400 text-sm mt-4">
-            Already have an account? <a href="{% url 'login' %}" class="text-custom hover:underline">Log In</a>
+        
+        <!-- Login prompt -->
+        <p class="text-center text-sm text-gray-600 mt-6">
+            Already have an account? <a href="{% url 'login' %}" class="text-[#006f4e] hover:text-[#004d3a]">Sign in</a>
         </p>
     </div>
-</body>
-</html>
-
-{% comment %} <!DOCTYPE html>
-<html>
-<head>
-    <title>Signup</title>
-</head>
-<body>
-    <h2>Signup</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }} <!-- Render the signup form -->
-        <button type="submit">Sign Up</button>
-    </form>
-</body>
-</html> {% endcomment %}
+</div>
+{% endblock %}
