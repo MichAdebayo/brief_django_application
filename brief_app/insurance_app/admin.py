@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Job, ContactMessage, Appointment,Availability
+from .models import UserProfile, Job, ContactMessage
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
 from django.utils.translation import gettext_lazy as _

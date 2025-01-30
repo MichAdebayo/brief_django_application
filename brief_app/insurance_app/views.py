@@ -5,8 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage, PredictionHistory, Appointment
-from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm,AppointmentForm
+from .models import UserProfile, Job, ContactMessage, PredictionHistory
+from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm
 from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
@@ -23,7 +23,6 @@ from django.db.models import Avg
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 from django.shortcuts import get_object_or_404
-from .models import Availability
 
 #### Eliandy ####
 
@@ -181,19 +180,6 @@ def predict_charges(request):
     # If not GET or POST, return an error
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-
-#Admin view for appointments
-@staff_member_required
-def admin_appointment_list(request):
-    """Show upcoming and past appointments for admins."""
-    appointments = Appointment.objects.all().order_by('date')
-    future_appointments = appointments.filter(date__gte=now())
-    past_appointments = appointments.filter(date__lt=now())
-
-    return render(request, 'insurance_app/appointments/admin_appointment_list.html', {
-        'future_appointments': future_appointments,
-        'past_appointments': past_appointments
-    })
 
 ###### Eliandy's Code Ends Here ######
 
