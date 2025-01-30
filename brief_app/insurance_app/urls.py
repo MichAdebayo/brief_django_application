@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import (solve_message,predict_charges,CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, 
                     JoinUsView, ApplyView, TemplateView, apply,contact_view, 
                     HealthAdvicesView, CybersecurityAwarenessView,message_list_view, ChangePasswordView, 
-                    PredictChargesView, UserLogoutView)
+                    PredictChargesView, UserLogoutView,WelcomeView,)
 
 
 urlpatterns = [
@@ -24,4 +24,7 @@ urlpatterns = [
     path('changepassword/', ChangePasswordView.as_view(), name='changepassword'),
     path('predict-charges/', PredictChargesView.as_view(), name='predict'),
     path('logout/', UserLogoutView.as_view(), name='logout_user'), 
-]
+    path('welcome/', WelcomeView.as_view(), name='welcome'), 
+    #path('admin-appointments/', admin_appointment_list, name='admin_appointment_list'),
+
+   ]

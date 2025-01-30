@@ -21,7 +21,7 @@
                 <ul class="flex space-x-8">
                     <!-- Home -->
                     <li>
-                        <form action="{% url 'home' %}" method="POST" class="inline">
+                        <form action="{% url 'welcome' %}" method="GET" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="px-4 py-2 rounded transition 
                                 {% if request.resolver_match.url_name == 'home' %}
@@ -39,7 +39,7 @@
                          <form action="{% url 'profile' %}" method="GET" class="inline">
                             <button type="submit" class="px-4 py-2 rounded transition 
                                 {% if request.resolver_match.url_name == '#' %}
-                                    bg-[#006f4e]!important text-white shadow-lg
+                                    bg-[#006f4e] text-white shadow-lg
                                 {% else %}
                                     hover:bg-[#ed1c24] hover:text-white 
                                 {% endif %}">
@@ -50,7 +50,7 @@
 
                     <!-- Join Us -->
                     <li>
-                        <form action="{% url 'predict' %}" method="POST" class="inline">
+                        <form action="{% url 'predict' %}" method="GET" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="px-4 py-2 rounded transition 
                                 {% if request.resolver_match.url_name == 'predict' %}
@@ -82,7 +82,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="my-10 pt-14">
+    <main class="my-10 pt-16">
         {% block content %} {% endblock %}
     </main>
 

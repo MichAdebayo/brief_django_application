@@ -53,26 +53,26 @@
 
 
     <!-- Header -->
-    <header class="bg-[#006f4e] text-white py-4">
+    <header class="bg-[#006f4e] text-white py-4 fixed w-full top-0 z-50">
         <div class="container mx-auto flex justify-between items-center px-6">
             <h1 class="text-2xl font-bold">Assur'Aimant</h1>
             <nav>
                 <ul class="flex space-x-8">
                     <!-- My profile-->
                     <li>
-                        <a href="{% url 'home' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'home' %}
+                        <a href="{% url 'profile' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'profile' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
                                 hover:bg-[#ed1c24] hover:text-white
                             {% endif %}">
-                            My Profile
+                            My Account
                         </a>
                     </li>
                     <!-- Contact Us -->
                     <li>
-                        <a href="{% url 'about' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'about' %}
+                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
+                            {% if request.resolver_match.url_name == 'contact' %}
                                 bg-[#ed1c24] text-white shadow-lg
                             {% else %}
                                 hover:bg-[#ed1c24] hover:text-white
@@ -99,7 +99,7 @@
 
 
         <!-- Slideshow Section -->
-        <div class="slideshow-container w-full h-[50vh] relative">
+        <div class="slideshow-container w-full h-[40vh] relative">
              <div id="slideshow-text" class="text-white w-full h-full py-0 flex justify-center items-center opacity-0 transition-all duration-1000">
                 <div class="text-center">
                    <!-- News content will go here  -->
@@ -113,9 +113,9 @@
         <!-- Main Content Section -->
         <main class="flex-grow flex flex-col justify-center items-center text-center p-10">
             <h1 class="text-5xl md:text-6xl font-bold text-emerald-900">
-                Welcome Back, {{ user.username }}!
+                Welcome, {{ user.username }}!
             </h1>
-            <h2 class="text-lg md:text-2xl m-5 italic text-black">
+            <h2 class="text-lg md:text-2xl m-5 italic text-gray-900">
                 We’re glad to have you with us again. Let's take care of your health plan.
             </h2>
 
@@ -131,11 +131,11 @@
             <div class="my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">My appointments</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Track my appointments</a>
+                    <a href="{% url 'appointment_list_and_create' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">View My Appointments</a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
-                    <h4 class="text-xl font-bold text-emerald-900">Payments Due</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Make Payment</a>
+                    <h4 class="text-xl font-bold text-emerald-900">My Account</h4>
+                    <a href="{% url 'profile' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">Edit My Profile </a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">My Password</h4>
@@ -157,19 +157,22 @@
     <script>
         const news = [
         {
-            title: "Assur'Aimant Update: Our New Health Plans Are Here!",
-            image: "{% static 'images/background1.svg' %}", // Example placeholder image
-            backgroundColor: "#009b9d" // Light peach
+            title: "Assur'Aimant Update: Our Health Campaign is Here!",
+            image: "https://cdn.cancercenter.com/-/media/ctca/images/others/blogs/2019/06-june/02-blog-healthy-food-l.jpg", // #HealthAwareness
+            backgroundColor: "#009b9d", // color
+            link: "{% url 'health_advices' %}" 
+        
         },
         {
             title: "New Partnerships for Better Coverage",
-            image: "{% static 'images/background3.svg' %}", // Example placeholder image
-            backgroundColor: "#009b9d" // Light blue
+            image: "https://www.pnc.com/content/dam/pnc-thought-leadership/small-business/growing-your-business/pnc_insights_business_four-ways-to-find-the-right-partner.jpg", //New partneships 
+            backgroundColor: "#111827", // color
         },
         {
             title: "Cybersecurity Awareness Campaign Launched",
-            image: "{% static 'images/background2.svg' %}", // Example placeholder image
-            backgroundColor: "009b9d" // Light green
+            image: "https://www.exprime-avocat.fr/wp-content/uploads/2023/09/Hameconnage-phishing.png", // Example placeholder image
+            backgroundColor: "#DAA520", // color code
+            link: "{% url 'cybersecurity_awareness' %}" 
         }
     ];
     
@@ -196,7 +199,11 @@
             <div class="slideshow-text flex w-full h-full">
                 <!-- Text container: ensure background color is only applied to this -->
                     <div class="flex-1 flex justify-center items-center p-10 text-white">
-                         <h1 class="font-bold text-4xl">${news[currentNewsIndex].title}</h1>
+                             <h1 class="font-bold text-4xl my-10 justify-center">
+                                    ${news[currentNewsIndex].link ? 
+                                    `<a href="${news[currentNewsIndex].link}" class="hover:underline">${news[currentNewsIndex].title}</a>` 
+                                    : news[currentNewsIndex].title}
+                            </h1>
                      </div>
                 <!-- Image container: take full height of the container, and ensure no rounding -->
                 <img src="${news[currentNewsIndex].image}" alt="${news[currentNewsIndex].image}" class="flex-1 w-full h-full object-cover">

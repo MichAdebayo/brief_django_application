@@ -5,8 +5,8 @@ from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage
-from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm
+from .models import UserProfile, Job, ContactMessage, Appointment
+from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm,AppointmentForm
 from django.http import HttpResponse
 import pickle
 from django.http import JsonResponse
@@ -17,7 +17,13 @@ from django.conf import settings
 from django.views import View 
 import pandas as pd
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now
+from django.shortcuts import get_object_or_404
+from .models import Availability
 
+
+#####Eliandy####
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -174,6 +180,23 @@ def predict_charges(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
+
+
+
+#Admin view for appointments
+@staff_member_required
+def admin_appointment_list(request):
+    """Show upcoming and past appointments for admins."""
+    appointments = Appointment.objects.all().order_by('date')
+    future_appointments = appointments.filter(date__gte=now())
+    past_appointments = appointments.filter(date__lt=now())
+
+    return render(request, 'insurance_app/appointments/admin_appointment_list.html', {
+        'future_appointments': future_appointments,
+        'past_appointments': past_appointments
+    })
+
+
 class SignupView(CreateView):                           # Generic view for creating an object
     model = UserProfile                                 # Model used
     form_class = UserSignupForm                         # Form used
@@ -229,7 +252,7 @@ class ChangePasswordView(PasswordChangeView):
 
 class PredictChargesView(LoginRequiredMixin, UpdateView): 
     model = get_user_model()
-    form_class = UserProfileForm
+    form_class = PredictChargesForm
     template_name = 'insurance_app/predict.html'
     success_url = reverse_lazy('predict')
 

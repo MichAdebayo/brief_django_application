@@ -1,6 +1,6 @@
 from django import forms
 from .models import UserProfile
-from .models import JobApplication  # Assuming you have a JobApplication model to store applications
+from .models import JobApplication, Appointment, Availability # Assuming you have a JobApplication model to store applications
 from django.utils.html import format_html
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import make_password
@@ -72,3 +72,54 @@ class ChangePasswordForm(PasswordChangeForm):
             self.fields[field].widget.attrs.update({
                 'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400',
             })
+
+
+
+class AppointmentForm(forms.ModelForm):
+    # Time slot choices (morning, afternoon)
+    time_slot = forms.ChoiceField(choices=[], required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Appointment
+        fields = ['availability', 'time_slot', 'reason']
+        widgets = {
+            'availability': forms.Select(attrs={'class': 'form-control'}),
+            'reason': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Show only available dates (those with is_available=True)
+        self.fields['availability'].queryset = Availability.objects.filter(is_available=True)
+
+        # Dynamically populate the time_slot field based on the selected availability date
+        if 'availability' in self.data:
+            try:
+                availability_id = int(self.data.get('availability'))
+                availability = Availability.objects.get(id=availability_id)
+                available_slots = self.get_available_time_slots(availability)
+                self.fields['time_slot'].choices = [(slot, slot) for slot in available_slots]
+            except (ValueError, Availability.DoesNotExist):
+                pass
+
+    def clean_availability(self):
+        """Check if the selected availability date is already booked."""
+        selected_date = self.cleaned_data.get('availability')
+        if Appointment.objects.filter(availability=selected_date).exists():
+            raise forms.ValidationError("This date is already booked. Please choose another one.")
+        return selected_date
+
+    def clean_time_slot(self):
+        """Ensure that the selected time_slot is available for the selected date."""
+        availability = self.cleaned_data.get('availability')
+        time_slot = self.cleaned_data.get('time_slot')
+
+        # Check if the selected time_slot exists for the selected availability
+        if not Availability.objects.filter(date=availability, time_slot=time_slot, is_available=True).exists():
+            raise forms.ValidationError(f"The selected time slot {time_slot} is not available for this date.")
+        return time_slot
+
+    def get_available_time_slots(self, availability):
+        """Retrieve available time slots dynamically from the Availability model."""
+        return [availability.time_slot for availability in Availability.objects.filter(date=availability.date, is_available=True)]

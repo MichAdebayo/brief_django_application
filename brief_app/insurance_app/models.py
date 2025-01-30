@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.utils.timezone import now
 
 class UserProfile(AbstractUser):
     class SmokerType(models.TextChoices):
@@ -65,4 +67,7 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
     
-    
+
+
+
+
