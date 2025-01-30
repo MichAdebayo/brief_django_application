@@ -15,7 +15,7 @@
     <!-- Header -->
     <header class="bg-[#006f4e] text-white py-4 fixed w-full top-0 z-50">  <!-- Added fixed, w-full, top-0, z-50 -->
         <div class="container mx-auto flex justify-between items-center px-6">
-            <div class="flex items-center h-full py-2 space-x-2">
+            <a href="{% url 'home' %}" class="flex items-center h-full py-2 space-x-2">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
                   viewBox="0 0 137 134" 
@@ -31,7 +31,7 @@
                 <span class="text-white font-bold text-2xl md:text-3xl font-sans hover:opacity-90 transition-opacity">
                   Assur'Aimant
                 </span>
-              </div>
+            </a>
 
             <nav>
 
@@ -116,18 +116,14 @@
       </style>
 
     <!-- Main Content -->
-    <main class="my-10 pt-14">
+    <main class="flex-1 flex items-center justify-center pt-20 pb-10">
         {% block content %} {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#006f4e] text-white py-6 mt-10">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2025 Assur'Aimant. All rights reserved.</p>
-            <nav class="mt-4">
-                <a href="{% url 'health_advices' %}" class="text-gray-300 hover:text-white mx-2">Health Advices</a> |
-                <a href="{% url 'cybersecurity_awareness' %}" class="text-gray-300 hover:text-white mx-2">Cybersecurity Awareness</a>
-            </nav>
+    <footer class="bg-[#006f4e] text-white py-2 md:py-4 mt-auto">
+        <div class="container mx-auto text-center text-sm md:text-base">
+            &copy; 2025 Assur'Aimant. All rights reserved.
         </div>
     </footer>
 
