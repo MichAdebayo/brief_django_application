@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 
 class UserProfile(AbstractUser):
     class SmokerType(models.TextChoices):
@@ -16,18 +18,141 @@ class UserProfile(AbstractUser):
         MALE = 'Male', 'Male'
         FEMALE = 'Female', 'Female'
 
+    # Personal Info
+    age = models.PositiveIntegerField(default=25)
+    weight = models.PositiveIntegerField(default=60, help_text="Weight in kilograms")
+    height = models.PositiveIntegerField(default=170, help_text="Height in centimeters")
+    num_children = models.PositiveIntegerField(default=0)
     
-    age = models.IntegerField(default=0)
-    weight = models.IntegerField(default=0)
-    height = models.IntegerField(default=0) 
-    num_children = models.IntegerField(default=0) 
-    smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
-    region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
-    sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)
+    # Choice-based Fields
+    smoker = models.CharField(
+        blank=False,
+        max_length=10,
+        choices=SmokerType.choices
+    )
+    region = models.CharField(
+        blank=False,
+        max_length=10,
+        choices=RegionType.choices,
+    )
+    sex = models.CharField(
+        blank=False,
+        max_length=10,
+        choices=SexType.choices,
+    )
+
+    # Calculated Property
+    @property
+    def bmi(self):
+        """Calculate BMI safely with zero division protection"""
+        if self.height <= 0:
+            return 0.0
+        return round(self.weight / ((self.height / 100) ** 2), 1)
 
     def __str__(self):
-        return self.username
+        return f"{self.username} Profile"
 
+class PredictionHistory(models.Model):
+    user = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='insurance_predictions'
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    # Frozen User State
+    age = models.PositiveIntegerField()
+    weight = models.PositiveIntegerField()
+    height = models.PositiveIntegerField()
+    num_children = models.PositiveIntegerField()
+    smoker = models.CharField(max_length=10)
+    region = models.CharField(max_length=10)
+    sex = models.CharField(max_length=10)
+    
+    # Prediction Result
+    predicted_charges = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Predicted insurance charges in USD"
+    )
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = "Insurance Prediction"
+        verbose_name_plural = "Insurance Predictions"
+        indexes = [
+            models.Index(fields=['user', '-timestamp']),
+        ]
+
+    # Derived Field
+    @property
+    def bmi(self):
+        """Preserve historical BMI calculation"""
+        if self.height <= 0:
+            return 0.0
+        return round(self.weight / ((self.height / 100) ** 2), 1)
+
+    def __str__(self):
+        return f"{self.user} prediction @ {self.timestamp:%Y-%m-%d}"
+    
+# class UserProfile(AbstractUser):
+#     class SmokerType(models.TextChoices):
+#         YES = 'Yes', 'Yes'
+#         NO = 'No', 'No'
+
+#     class RegionType(models.TextChoices):
+#         NORTHEAST = 'Northeast', 'Northeast'
+#         NORTHWEST = 'Northwest', 'Northwest'
+#         SOUTHEAST = 'Southeast', 'Southeast'
+#         SOUTHWEST = 'Southwest', 'Southwest'
+
+#     class SexType(models.TextChoices):
+#         MALE = 'Male', 'Male'
+#         FEMALE = 'Female', 'Female'
+
+    
+#     age = models.IntegerField(default=0)
+#     weight = models.IntegerField(default=0)
+#     height = models.IntegerField(default=0) 
+#     num_children = models.IntegerField(default=0) 
+#     smoker = models.CharField(blank=False, choices=SmokerType.choices, max_length=10)
+#     region = models.CharField(blank=False, choices=RegionType.choices, max_length=10)
+#     sex = models.CharField(blank=False, choices=SexType.choices, max_length=10)
+
+#     def __str__(self):
+#         return self.username
+
+# class PredictionHistory(models.Model):
+#     user = models.ForeignKey(
+#         UserProfile, 
+#         on_delete=models.CASCADE,
+#         related_name='predictions'
+#     )
+#     timestamp = models.DateTimeField(auto_now_add=True)
+    
+#     # Snapshot of user data at prediction time
+#     age = models.IntegerField()
+#     weight = models.IntegerField()
+#     height = models.IntegerField()
+#     num_children = models.IntegerField()
+#     smoker = models.CharField(max_length=10)
+#     region = models.CharField(max_length=10)
+#     sex = models.CharField(max_length=10)
+    
+#     predicted_charges = models.DecimalField(
+#         max_digits=10, 
+#         decimal_places=2
+#     )
+
+#     class Meta:
+#         ordering = ['-timestamp']
+#         verbose_name_plural = "Prediction History"
+
+#     def __str__(self):
+#         return f"{self.user.username} - {self.timestamp}"
+    
+
+######################################################
 
 #For the join us job application area
  
@@ -64,5 +189,4 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
-    
     

@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage
+from .models import UserProfile, Job, ContactMessage, PredictionHistory
 from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm
 from django.http import HttpResponse
 import pickle
@@ -18,7 +18,9 @@ from django.views import View
 import pandas as pd
 import os
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.views.generic import ListView
+from django.utils import timezone
+from django.db.models import Avg
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -242,62 +244,82 @@ class UserLogoutView(LoginRequiredMixin, View):
         logout(request)
         return render(request, self.template_name, {'user': user})
 
-class PredictChargesView(LoginRequiredMixin, UpdateView): 
+
+
+
+class PredictChargesView(LoginRequiredMixin, UpdateView):
     model = get_user_model()
     form_class = PredictChargesForm
     template_name = 'insurance_app/predict.html'
     success_url = reverse_lazy('predict')
 
     def get_object(self, queryset=None):
-        # Return the UserProfile object for the logged-in user
         return self.request.user
 
     def form_valid(self, form):
         user_profile = self.get_object()
+        
+        # Update and save user profile
+        user_profile.age = form.cleaned_data['age']
+        user_profile.weight = form.cleaned_data['weight']
+        user_profile.height = form.cleaned_data['height']
+        user_profile.num_children = form.cleaned_data['num_children']
+        user_profile.smoker = form.cleaned_data['smoker']
+        user_profile.save()  # Uncommented to persist changes
 
-        # Update values from form
-        user_profile.age = form.cleaned_data.get('age')
-        user_profile.weight = form.cleaned_data.get('weight')
-        user_profile.height = form.cleaned_data.get('height')
-        user_profile.num_children = form.cleaned_data.get('num_children')
-        user_profile.smoker = form.cleaned_data.get('smoker')
-        # user_profile.save()  # Save updated profile data
+        # Validate inputs
+        if user_profile.height <= 0:
+            return self.form_invalid(form, "Invalid height value")
 
-        if user_profile.weight is None or user_profile.height is None or user_profile.height == 0:
-            return render(self.request, self.template_name, {
-                "error": "Invalid weight or height values.",
-                "form": form
-            })
+        # Calculate BMI using model property
+        try:
+            bmi = user_profile.bmi
+        except ZeroDivisionError:
+            return self.form_invalid(form, "Invalid height value (cannot be zero)")
 
-        # Calculate BMI
-        bmi = user_profile.weight / ((user_profile.height / 100) ** 2)
-
-        personal_data = {
+        # Create prediction data
+        prediction_data = {
             "age": user_profile.age,
             "bmi": bmi,
             "smoker": user_profile.smoker,
             "children": user_profile.num_children,
+            "region": user_profile.region,
+            "sex": user_profile.sex
         }
 
-        # Preprocess the data
-        preprocessed_data = self.preprocess_data(personal_data)
-
-        # Load the model
+        # Preprocess and predict
+        preprocessed_data = self.preprocess_data(prediction_data)
         model = self.load_model()
-        if model is None:
-            return render(self.request, self.template_name, {
-                "error": "Failed to load the model.",
-                "form": form
-            })
+        
+        if not model:
+            return self.form_invalid(form, "Failed to load prediction model")
 
-        # Predict charges
         predicted_charges = model.predict(preprocessed_data)
+        prediction_value = round(predicted_charges[0], 2)
 
-        return render(self.request, self.template_name, {
-            "predicted_charges": round(predicted_charges[0], 2),
-            "form": form
-        })
-    
+        # Save prediction history
+        PredictionHistory.objects.create(
+            user=user_profile,
+            age=user_profile.age,
+            weight=user_profile.weight,
+            height=user_profile.height,
+            num_children=user_profile.num_children,
+            smoker=user_profile.smoker,
+            region=user_profile.region,
+            sex=user_profile.sex,
+            predicted_charges=prediction_value
+        )
+
+        return self.render_to_response(self.get_context_data(
+            form=form,
+            predicted_charges=prediction_value,
+            recent_predictions=user_profile.insurance_predictions.all()[:5]
+        ))
+
+    def form_invalid(self, form, error_message):
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
+
     def categorize_bmi(self, bmi):
         if bmi < 18.5:
             return "under_weight"
@@ -369,10 +391,32 @@ class PredictChargesView(LoginRequiredMixin, UpdateView):
         except pickle.UnpicklingError:
             print("Error: The file could not be unpickled. Ensure it is a valid pickle file.")
             return None
-        
+
+
+class PredictionHistoryView(LoginRequiredMixin, ListView):
+    model = PredictionHistory
+    template_name = 'insurance_app/prediction_history.html'
+    context_object_name = 'predictions'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)\
+            .select_related('user')\
+            .order_by('-timestamp')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'user_profile': self.request.user,
+            'total_predictions': self.get_queryset().count(),
+            'average_charges': self.get_queryset().aggregate(
+                Avg('predicted_charges')
+            )['predicted_charges__avg']
+        })
+        return context
+
 
 #################################################################################
-
 
     # class SignupView(CreateView):
 #     model = UserProfile
