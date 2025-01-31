@@ -1,5 +1,5 @@
 <!-- book_appointment.html -->
-{% extends 'insurance_app/base_user.html' %}
+{% extends 'insurance_app/base_final.html' %}
 {% load static %}
 
 {% load custom_filters %}
@@ -36,21 +36,21 @@
             {% csrf_token %}
             
             <div class="space-y-4">
-                <label for="id_reason" class="block text-gray-700 font-medium">Reason for Appointment</label>
+                <label for="id_reason" class="block text-emerald-800 font-medium">Reason for Appointment</label>
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     {{ form.reason }}
                 </div>
             </div>
             
             <div class="space-y-4">
-                <label for="id_date" class="block text-gray-700 font-medium">Appointment Date</label>
+                <label for="id_date" class="block text-emerald-800 font-medium">Appointment Date</label>
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     {{ form.date }}
                 </div>
             </div>
 
             <div class="space-y-4">
-                <label for="id_time" class="block text-gray-700 font-medium">Appointment Time</label>
+                <label for="id_time" class="block text-emerald-800 font-medium">Appointment Time</label>
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     <select name="time" id="id_time" class="w-full border-gray-300 rounded-lg py-3 px-4">
                         {% for time in "times"|time_range %}
@@ -61,7 +61,7 @@
                 
             </div>
 
-            <button type="submit" class="w-full bg-[#026f4e] text-white py-3 rounded-lg hover:bg-[#014d3b] transition duration-300">
+            <button type="submit" class="w-full bg-[#006f4e] text-white py-3 rounded-lg hover:bg-[#009b9d] transition duration-300">
                 Book Appointment
             </button>
         </form>
@@ -102,4 +102,40 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_date').change(function () {
+            var selectedDate = $(this).val();
+            
+            if (selectedDate) {
+                $.ajax({
+                    url: "{% url 'get_available_times' %}",
+                    data: {'date': selectedDate},
+                    dataType: 'json',
+                    success: function (data) {
+                        var timeSelect = $('#id_time');
+                        timeSelect.empty();
+                        
+                        if (data.times.length > 0) {
+                            $.each(data.times, function (index, time) {
+                                timeSelect.append($('<option>', {
+                                    value: time,
+                                    text: time
+                                }));
+                            });
+                        } else {
+                            timeSelect.append($('<option>', {
+                                text: 'No available times',
+                                disabled: true
+                            }));
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 {% endblock %}

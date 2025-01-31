@@ -1,99 +1,6 @@
+{% extends "insurance_app/base_final.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Assur'Aimant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-
-/* Slideshow container */
-    .slideshow-container {
-        display: flex;
-        flex-direction: column; /* Stack children vertically */
-        align-items: center;   /* Center align title and text */
-        text-align: center;    /* Ensure text is centered */
-    }
-
-    .slideshow-container img {
-        max-width: 100%; /* Ensures the image does not exceed container width */
-        max-height: 100%; /* Ensures the image does not exceed container height */
-        object-fit: cover; /* Crops the image to cover the container while preserving aspect ratio */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow for better visuals */
-
-    }
-    
- /* News text container */
-    .slideshow-text {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 1.5rem; /* Adjust font size for better fit */
-        text-align: center;
-        opacity: 1;
-        transition: opacity 2s ease-in-out;
-    }
-    </style>
-
-</head>
-
-<body class="min-h-screen flex flex-col text-whitesmoke font-sans bg-[#FBFCFA]">
-    <!-- Main Flex Container -->
-    <div class="flex flex-col min-h-screen">
-
-        <!-- Slideshow and Header Section -->
-
-
-    <!-- Header -->
-    <header class="bg-[#006f4e] text-white py-4 fixed w-full top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <h1 class="text-2xl font-bold">Assur'Aimant</h1>
-            <nav>
-                <ul class="flex space-x-8">
-                    <!-- My profile-->
-                    <li>
-                        <a href="{% url 'profile' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'profile' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            My Account
-                        </a>
-                    </li>
-                    <!-- Contact Us -->
-                    <li>
-                        <a href="{% url 'contact' %}" class="px-4 py-2 rounded transition 
-                            {% if request.resolver_match.url_name == 'contact' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Contact Us 
-                        </a>
-                    </li>
-                    <!-- Logout -->
-                    <li>
-                        <a href="{% url 'logout_user' %}" class="px-4 py-2 rounded-md transition 
-                            {% if request.resolver_match.url_name == 'join_us' %}
-                                bg-[#ed1c24] text-white shadow-lg
-                            {% else %}
-                                hover:bg-[#ed1c24] hover:text-white
-                            {% endif %}">
-                            Logout
-                        </a>
-
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
+{% block content %}
 
         <!-- Slideshow Section -->
         <div class="slideshow-container w-full h-[40vh] relative">
@@ -112,14 +19,14 @@
             <h1 class="text-5xl md:text-6xl font-bold text-emerald-900">
                 Welcome, {{ user.username }}!
             </h1>
-            <h2 class="text-lg md:text-2xl m-5 italic text-gray-900">
+            <h2 class="text-lg md:text-2xl m-5  text-gray-900">
                 We’re glad to have you with us again. Let's take care of your health plan.
             </h2>
 
             <!-- Quick Access -->
             <div class="my-8">
-                <h3 class="text-2xl font-semibold text-emerald-900 py-4">Your charges</h3>
-                <a href="{% url 'predict' %}" class="bg-[#009b9d] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#ed1c24]">
+                <h3 class="text-2xl font-semibold text-gray-900 py-4">Your charges</h3>
+                <a href="{% url 'predict' %}" class="bg-[#006f4e] text-white px-6 py-2 rounded-md font-bold transition duration-300 hover:bg-[#009b9d]">
                     Estimate my charges
                 </a>
             </div>
@@ -128,11 +35,11 @@
             <div class="my-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">My Appointments</h4>
-                    <a href="{% url 'about' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my appointments</a>
+                    <a href="{% url 'book_appointment' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my appointments</a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">View Estimate History</h4>
-                    <a href="{% url 'prediction_history' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my esitmated charges </a>
+                    <a href="{% url 'prediction_history' %}" class="mt-4 text-[#009b9d] hover:text-[#ed1c24]">view my estimated charges </a>
                 </div>
                 <div class="bg-white p-6 rounded-md shadow-md">
                     <h4 class="text-xl font-bold text-emerald-900">My Password</h4>
@@ -142,14 +49,6 @@
         </main>
     </div>
 
-
-
-    <!-- Footer -->
-    <footer class="bg-[#006f4e] text-white py-2 md:py-4 mt-auto">
-        <div class="container mx-auto text-center text-sm md:text-base">
-            &copy; 2025 Assur'Aimant. All rights reserved.
-        </div>
-    </footer>
 
     <script>
         const news = [
@@ -218,6 +117,36 @@
         // Initialize the first news slide
         updateSlideshow();
     </script>
-</body>
 
-</html>
+    <style>
+
+        /* Slideshow container */
+            .slideshow-container {
+                display: flex;
+                flex-direction: column; /* Stack children vertically */
+                align-items: center;   /* Center align title and text */
+                text-align: center;    /* Ensure text is centered */
+            }
+        
+            .slideshow-container img {
+                max-width: 100%; /* Ensures the image does not exceed container width */
+                max-height: 100%; /* Ensures the image does not exceed container height */
+                object-fit: cover; /* Crops the image to cover the container while preserving aspect ratio */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a soft shadow for better visuals */
+        
+            }
+            
+         /* News text container */
+            .slideshow-text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 1.5rem; /* Adjust font size for better fit */
+                text-align: center;
+                opacity: 1;
+                transition: opacity 2s ease-in-out;
+            }
+            </style>
+{% endblock %}

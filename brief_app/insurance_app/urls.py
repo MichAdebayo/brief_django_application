@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from .views import (solve_message,predict_charges,CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, 
                     JoinUsView, ApplyView, TemplateView, apply,contact_view, 
                     HealthAdvicesView, CybersecurityAwarenessView,message_list_view, ChangePasswordView, 
-                    PredictChargesView, UserLogoutView,WelcomeView, PredictionHistoryView,book_appointment)
+                    PredictChargesView, UserLogoutView,WelcomeView, PredictionHistoryView,book_appointment,get_available_times,TestingView)
 
 
 urlpatterns = [
@@ -18,6 +18,7 @@ urlpatterns = [
     path('predict-charges/', PredictChargesView.as_view(), name='predict'),
     path('prediction-history/', PredictionHistoryView.as_view(), name='prediction_history'),
     path("book/", book_appointment, name="book_appointment"),
+   
     #path('admin-appointments/', admin_appointment_list, name='admin_appointment_list'),
 
     # Other website pages
@@ -39,4 +40,8 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='insurance_app/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='insurance_app/password_reset_complete.html'), name='password_reset_complete'),
     path('changepassword/', ChangePasswordView.as_view(), name='changepassword'), # Change within profile 
+
+    #administration
+    path('get-available-times/', get_available_times, name='get_available_times'),
+    path('testing/', TestingView.as_view(), name='testing'),
    ]

@@ -1,8 +1,7 @@
-{% extends "insurance_app/base.html" %}
+{% extends "insurance_app/base_final.html" %}
 {% load static %}
 {% block content %}
 <!-- Hero Section -->
-
 <section class="relative bg-cover bg-center bg-no-repeat py-20" style="background-image: url('{% static 'images/join_us.svg' %}');">
     <div class="absolute inset-0 bg-black opacity-30"></div> <!-- Dark overlay -->
     <div class="container mx-auto text-center relative z-10">
@@ -106,5 +105,4 @@
         });
     });
 </script>
-
 {% endblock %}

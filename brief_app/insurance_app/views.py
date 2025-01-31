@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from .models import UserProfile, Job, ContactMessage, PredictionHistory, Appointment
+from .models import UserProfile, Job, ContactMessage, PredictionHistory, Appointment,Availability
 from .forms import UserProfileForm, UserSignupForm, ApplicationForm, ChangePasswordForm, PredictChargesForm, AppointmentForm
 from django.http import HttpResponse
 import pickle
@@ -31,7 +31,9 @@ from django.utils import timezone
 class HomeView(TemplateView):
     template_name = 'insurance_app/home.html'   # Home Page  View Template
          
-
+class TestingView(TemplateView):
+    template_name = 'insurance_app/base_final.html'   # Home Page  View Template
+         
 class AboutView(TemplateView):
     template_name= 'insurance_app/about.html'   # About Us View Template
 
@@ -218,6 +220,15 @@ def book_appointment(request):
         'past_appointments': past_appointments,
     })
 
+def get_available_times(request):
+    date = request.GET.get('date')
+    if date:
+        try:
+            availability = Availability.objects.get(date=date)
+            return JsonResponse({"times": availability.time_slots})
+        except Availability.DoesNotExist:
+            return JsonResponse({"times": []})
+    return JsonResponse({"times": []})
 
 ###### Eliandy's Code Ends Here ######
 

@@ -150,3 +150,11 @@ class Appointment(models.Model):
         return f"{self.reason} on {self.date} at {self.time}"
 
 
+####handling availability 
+
+class Availability(models.Model):
+    date = models.DateField(unique=True)
+    time_slots = models.JSONField(default=list)  # Store available times as a list
+
+    def __str__(self):
+        return f"{self.date} - {', '.join(self.time_slots)}"

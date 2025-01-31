@@ -1,29 +1,6 @@
+{% extends "insurance_app/base_final.html" %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - Assur'Aimant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800">
-    <!-- Header -->
-    <header class="bg-gray-900 text-white py-4">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-2xl font-bold">Assur'Aimant</h1>
-            <nav>
-                <ul class="flex space-x-6">
-                    <li><a href="{% url 'home' %}" class="hover:text-gray-400">Home</a></li>
-                    <li><a href="{% url 'about' %}" class="hover:text-gray-400">About Us</a></li>
-                    <li><a href="{% url 'join_us' %}" class="hover:text-gray-400">Join Us</a></li>
-                    <li><a href="{% url 'about' %}" class="hover:text-gray-400">Get a Quote</a></li>
-                    <li><a href="{% url 'contact' %}" class="hover:text-gray-400">Contact Us</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+{% block content %}
 
     <!-- Thank You Section -->
     <section class="py-20 text-center">
@@ -33,11 +10,4 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-4">
-        <div class="container mx-auto text-center">
-            &copy; 2025 Assur'Aimant. All rights reserved.
-        </div>
-    </footer>
-</body>
-</html>
+{% endblock%}
