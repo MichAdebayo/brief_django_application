@@ -338,33 +338,46 @@ class Availability(models.Model):
         return f"{self.date} - {', '.join(self.time_slots)}"
     
 
-class Availability(models.Model):
+class Appointment(models.Model):
     """
-    Represents the availability of time slots for a specific date.
+    Represents an appointment made by a user.
 
-    This model stores the available time slots for a given date, where each date has a 
-    list of available times. The time slots are stored as a JSON field for flexibility, 
-    and the date field is unique, ensuring that each date can only have one set of time slots.
+    This model stores the details of an appointment, including the user who made the appointment,
+    the reason for the appointment, the date and time of the appointment, and the reason for the appointment.
 
     Attributes:
-        date (DateField): The date for which the availability is being tracked. This field is unique.
-        time_slots (JSONField): A JSON field that stores a list of available time slots for the given date.
+        user (ForeignKey): A reference to the user who made the appointment. This is a foreign key to the user model.
+        reason (CharField): A field to store the reason for the appointment, with choices like 'Consultation', 
+                             'Insurance Claim', and 'Policy Inquiry'.
+        date (DateField): The date of the appointment. The default date is set to February 3, 2025.
+        time (CharField): The time of the appointment, stored as a string in the format of HH:MM.
 
     Methods:
         __str__():
-            Returns a string representation of the availability, combining the date and time slots.
-            Example: '2025-01-31 - 09:00, 14:00, 16:00'
+            Returns a string representation of the appointment, including the reason, date, and time.
+            Example: 'Consultation on 2025-02-03 at 10:00'
 
     Args:
-        date (datetime.date): The date for which the availability is recorded.
-        time_slots (list): A list of strings representing the available time slots for that date.
-    
+        user (User): The user who is making the appointment.
+        reason (str): The reason for the appointment (e.g., 'Consultation', 'Insurance Claim', etc.).
+        date (datetime.date): The date the appointment is scheduled for.
+        time (str): The time the appointment is scheduled for (e.g., '10:00').
+
     Returns:
-        str: A string that represents the date and available time slots in a readable format.
+        str: A string that represents the appointment in a readable format.
     """
-    date = models.DateField(unique=True)
-    time_slots = models.JSONField(default=list)  # Store available times as a list
+    REASON_CHOICES = [
+        ("Consultation", "Consultation"),
+        ("Insurance Claim", "Insurance Claim"),
+        ("Policy Inquiry", "Policy Inquiry"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50, choices=REASON_CHOICES)
+    date = models.DateField(default=date(2025, 2, 3))  # Correct default date
+    time = models.CharField(max_length=10)
 
     def __str__(self):
-        return f"{self.date} - {', '.join(self.time_slots)}"
+        return f"{self.reason} on {self.date} at {self.time}"
+
 
