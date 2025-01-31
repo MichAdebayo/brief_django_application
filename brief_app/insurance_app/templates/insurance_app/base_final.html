@@ -1,4 +1,4 @@
-{% load static %}
+% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,12 +37,6 @@
                     {% if user.is_authenticated %}
                     <!-- Welcome and Logout (Authenticated) -->
                     <span class="text-white">Welcome, {{ user.username }}</span>
-                        <form action="{% url 'logout_user' %}" method="POST" class="inline">
-                                {% csrf_token %}
-                                <button type="submit" class="px-4 py-2 border border-transparent rounded hover:bg-[#ed1c24] hover:text-white transition-all">
-                                                    Logout
-                                </button>
-                                </form>
                         <!-- About Us -->
                         <div x-data="{ open: false }" class="relative inline-block">
                             <button @click="open = !open" class="px-4 py-2 border border-transparent rounded hover:bg-[#ed1c24] hover:text-white transition-all">
@@ -74,6 +68,7 @@
                                 <a href="{% url 'welcome' %}" class="block px-3 py-1.5 text-sm hover:bg-gray-200">My Account</a>
                                 <a href="{% url 'profile' %}" class="block px-3 py-1.5 text-sm hover:bg-gray-200">Edit Profile</a>
                                 <a href="{% url 'changepassword' %}" class="block px-3 py-1.5 text-sm hover:bg-gray-200">Change Password</a>
+                                <a href="{% url 'logout_user' %}" class="block px-3 py-1.5 text-sm hover:bg-gray-200">Logout</a>
                             </div>
                     {% else %}
 
