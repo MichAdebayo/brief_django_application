@@ -4,7 +4,6 @@ from .models import JobApplication, Appointment
 from django.utils.html import format_html
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import make_password
-#from django_flatpickr.widgets import DatePickerInput  # or another widget type
 from django.forms import DateInput
 
 class PredictChargesForm(forms.ModelForm):
