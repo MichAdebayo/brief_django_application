@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views 
 from .views import (solve_message,predict_charges,CustomLoginView, SignupView, HomeView, UserProfileView, AboutView, 
-                    JoinUsView, ApplyView, TemplateView, apply,contact_view, 
+                    JoinUsView, ApplyView, TemplateView, apply,contact_view, contact_view_user,
                     HealthAdvicesView, CybersecurityAwarenessView,message_list_view, ChangePasswordView, 
                     PredictChargesView, UserLogoutView,WelcomeView, PredictionHistoryView,book_appointment,get_available_times,TestingView)
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('join-us/', JoinUsView.as_view(), name='join_us'),
     path('apply/', apply, name='apply'),
     path('contact/', contact_view, name='contact'),
+    path('contact-us/', contact_view_user, name='contact_form'),
     path('apply/', ApplyView.as_view(), name='apply'),
     path('thank-you/', TemplateView.as_view(template_name='insurance_app/apply_thank_you.html'), name='apply_thank_you'), #thank you after applying a job
     path('health-advices/', HealthAdvicesView.as_view(), name='health_advices'),
