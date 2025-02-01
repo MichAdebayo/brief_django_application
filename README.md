@@ -8,7 +8,7 @@ A professional Django application for predicting insurance premiums using machin
 
 Here is a snip of the general home page:
 
-![App Screenshot](../insurance_app/static/images/web-screenshot-1.png)
+![App Screenshot](brief_app/insurance_app/static/images/web-screenshot-1.png)
 
 Here is a snip of the client home page:
 
