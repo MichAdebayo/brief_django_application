@@ -205,7 +205,7 @@ class WelcomeView(TemplateView):
     template_name = 'insurance_app/welcome.html' 
 
 
-#To handle the messages submission
+#To handle non-client messages submission
 def contact_view(request):
     """
     Handles the contact form submission and displays the contact form.
@@ -236,6 +236,37 @@ def contact_view(request):
 
     return render(request, "insurance_app/contact_form.html")
 
+
+# To handle client messages submission
+def contact_view_user(request):
+    """
+    Handles the contact form submission and displays the contact form for loggedin users.
+
+    This view processes POST requests to capture user input (name, email, and message),
+    saves the message in the database, and displays a success message before redirecting 
+    the user back to the contact page. For GET requests, it renders the contact form.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse:
+            - If POST: Redirects to the contact page after saving the message.
+            - If GET: Renders the 'contact_form.html' template.
+    """
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        # Save the message to the database
+        ContactMessage.objects.create(name=name, email=email, message=message)
+
+        # Show a success message
+        messages.success(request, "Your message has been sent successfully!")
+        return redirect('contact_form')  # Replace 'contact' with the name of your URL pattern
+
+    return render(request, "insurance_app/contact_form_user.html")
 
 @staff_member_required
 def message_list_view(request):
